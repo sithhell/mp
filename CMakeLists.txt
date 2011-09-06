@@ -23,4 +23,7 @@ if(DEFINED NT2_ROOT)
 endif()
 
 include(NT2Module)
-nt2_module_main(mpfr)
+
+
+# TODO: implement loop to automatically detect modules
+add_subdirectory(mpfr)
