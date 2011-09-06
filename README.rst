@@ -1,8 +1,8 @@
-	.. title:: NT2 - C++ High Performance Computing Made Easy
+.. title:: NT2 - C++ High Performance Computing Made Easy
 
 
 =================================================
-The Numerical Template Toolbox Modules Repository
+The Numerical Template Toolbox MPFR module
 =================================================
 
 .. image:: http://www.lri.fr/~falcou/nt2.png
@@ -20,6 +20,5 @@ between prototype and actual application.
 
 So What is This About ?
 :::::::::::::::::::::::
-This repository contains in its branches various optional modules for **NT**:sup:`2` that covers
-various mathematical functions sets, new types or algorithms to be used directly with **NT**:sup:`2`.
+This branch contains a module that integrates `MPFR <http://www.mpfr.org/>`_ with **NT**:sup:`2`.
 
