@@ -22,8 +22,8 @@ if(DEFINED NT2_ROOT)
   list(APPEND CMAKE_MODULE_PATH ${NT2_ROOT}/cmake)
 endif()
 
+
 include(NT2Module)
-
-
+nt2_module_main(mpfr)
 # TODO: implement loop to automatically detect modules
-add_subdirectory(mpfr)
+#add_subdirectory(mpfr)
