@@ -16,4 +16,4 @@ endif()
 
 
 include(NT2Module)
-nt2_module_main(mpfr)
+nt2_module_main(mp)
