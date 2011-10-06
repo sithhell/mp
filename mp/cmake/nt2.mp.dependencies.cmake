@@ -19,3 +19,5 @@ else()
   set(NT2_MP_DEPENDENCIES_LIBRARIES ${MPFR_LIBRARY})
   set(NT2_MP_DEPENDENCIES_EXTRA sdk)
 endif()
+
+set(NT2_MP_LIBRARIES nt2_toolbox_mp)
