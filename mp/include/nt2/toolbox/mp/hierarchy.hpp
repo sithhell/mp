@@ -23,14 +23,23 @@ namespace nt2 { namespace mp
 
         template <typename Hierarchy, typename Backend>
         struct mp_
+            : boost::dispatch::meta::scalar_<Hierarchy>
+#if 0
           : hierarchy<
+                /*
                 mp_<
                     typename Hierarchy::parent
                   , Backend
                 >
+                */
+                boost::dispatch::meta::scalar_<Hierarchy>
             >
-        {};
+#endif
+        {
+            typedef boost::dispatch::meta::scalar_<Hierarchy> parent;
+        };
         
+        /*
         template <typename Hierarchy, typename Backend>
         struct mp_<boost::dispatch::meta::unspecified_<Hierarchy>, Backend>
             : hierarchy<
@@ -41,6 +50,7 @@ namespace nt2 { namespace mp
                 >
             >
         {};
+        */
     }
 }}
 

@@ -1,4 +1,5 @@
 
+#include <mpfr.h>
 #include <nt2/toolbox/mp/backend/mpfr/mpfr.hpp>
 
 namespace nt2 { namespace mp { namespace backend
@@ -58,6 +59,13 @@ namespace nt2 { namespace mp { namespace backend
     }
         
     mpfr & mpfr::operator=(mpfr const & value)
+    {
+        mpfr tmp(value);
+        swap(*this, tmp);
+        return *this;
+    }
+        
+    mpfr & mpfr::operator=(mpfr_t const & value)
     {
         mpfr tmp(value);
         swap(*this, tmp);

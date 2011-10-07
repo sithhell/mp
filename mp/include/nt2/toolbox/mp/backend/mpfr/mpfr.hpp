@@ -6,14 +6,8 @@
 #include <mpfr.h>
 #include <string>
 
-#include <nt2/toolbox/mp/hierarchy.hpp>
-
 namespace nt2 { namespace mp { namespace backend
 {
-    namespace tag {
-        struct mpfr_ {};
-    }
-
     ////////////////////////////////////////////////////////////////////////////
     // Lightweight wrapper around mpfr_t:
     //  - RAII for ressource management
@@ -24,8 +18,6 @@ namespace nt2 { namespace mp { namespace backend
     struct mpfr
     {
         typedef mpfr_t native_type;
-
-        typedef tag::mpfr_ backend_type;
 
         ////////////////////////////////////////////////////////////////////////
         // Constructors
@@ -81,6 +73,7 @@ namespace nt2 { namespace mp { namespace backend
 
         // Assignment
         mpfr & operator=(mpfr const & value);
+        mpfr & operator=(mpfr_t const & value);
         mpfr & operator=(unsigned long int value);
         mpfr & operator=(long int value);
         mpfr & operator=(float value);
@@ -93,30 +86,6 @@ namespace nt2 { namespace mp { namespace backend
     ////////////////////////////////////////////////////////////////////////////
 
     void swap(mpfr & f0, mpfr & f1);
-}}}
-
-namespace boost { namespace dispatch { namespace meta
-{
-    template <typename Origin>
-    struct property_of< ::nt2::mp::backend::mpfr, Origin>
-    {
-        typedef floating_<Origin> type;
-    };
-
-    template <>
-    struct hierarchy_of< ::nt2::mp::backend::mpfr>
-    {
-        typedef
-            boost::dispatch::meta::scalar_<
-                nt2::mp::meta::mp_<
-                    boost::dispatch::meta::floating_<
-                        ::nt2::mp::backend::mpfr
-                    >
-                  , nt2::mp::backend::tag::mpfr_
-                >
-            >
-            type;
-    };
 }}}
 
 #endif

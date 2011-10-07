@@ -4,24 +4,23 @@
 
 #include <boost/proto/proto.hpp>
 #include <nt2/sdk/dsl/evaluate.hpp>
-#include <boost/simd/include/functions/assign.hpp>
 
 namespace nt2 { namespace mp
 {
     struct grammar
         : boost::proto::or_<
             boost::proto::plus<grammar, grammar>
+          , boost::proto::multiplies<grammar, grammar>
           , boost::proto::terminal<boost::proto::_>
         >
     {};
 
     template <typename Expr>
     struct expr;
-
+ 
     struct domain
         : boost::proto::domain<boost::proto::pod_generator<expr>, grammar>
-    {
-    };
+    {};
 
     template <typename Expr>
     struct expr
@@ -90,7 +89,6 @@ namespace nt2 { namespace mp
         template <typename Expr>
         float_ &operator=(Expr const & expr)
         {
-            std::cout << "ok ...\n";
             nt2::evaluate(
                 expr, boost::proto::value(*this)
             );
@@ -122,6 +120,23 @@ namespace nt2 { namespace mp
         
     };
 
+}}
+
+namespace boost { namespace dispatch {
+    namespace meta
+    {
+        template <typename Expression>
+        struct semantic_of<nt2::mp::expr<Expression> >
+        {
+            typedef nt2::mp::backend::mpfr type;
+        };    
+        
+        template <typename Backend>
+        struct semantic_of<nt2::mp::float_<Backend> >
+        {
+            typedef nt2::mp::backend::mpfr type;
+        };
+    }
 }}
 
 #endif
