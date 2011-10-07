@@ -9,6 +9,7 @@
 #include <nt2/toolbox/mp/backend/mpfr/tag.hpp>
 #include <nt2/toolbox/mp/backend/mpfr/hierarchy.hpp>
 #include <nt2/toolbox/mp/float.hpp>
+#include <nt2/toolbox/mp/evaluate.hpp>
 
 #include <boost/dispatch/dsl/compute.hpp>
 #include <boost/dispatch/dsl/call.hpp>
@@ -25,14 +26,16 @@ namespace nt2 { namespace mp
     namespace ext
     {
         template <typename Backend>
-        struct compute_impl<boost::simd::tag::plus_, Backend>
+        struct calc_impl<boost::simd::tag::plus_, Backend>
         {
             struct call
             {
                 nt2::mp::backend::mpfr &
                 operator()(nt2::mp::backend::mpfr const & a0, nt2::mp::backend::mpfr const & a1, nt2::mp::backend::mpfr& state)
                 {
+                    std::cout << "err?\n";
                     mpfr_add(state.data, a0.data, a1.data, MPFR_RNDN);
+                    std::cout << mpfr_get_d(state.data, MPFR_RNDN) << "\n";
                     
                     return state;
                 }
@@ -51,7 +54,7 @@ namespace nt2 { namespace mp
 
         /*
         template <typename Backend>
-        struct compute_impl<boost::simd::tag::multiplies_, Backend>
+        struct calc_impl<boost::simd::tag::multiplies_, Backend>
         {
             struct call
             {
@@ -76,115 +79,6 @@ namespace nt2 { namespace mp
         };
         */
     }
-
-#define H(A0)\
-            nt2::mp::meta::mp_< \
-                boost::dispatch::meta::floating_< \
-                    A0 \
-                > \
-              , nt2::mp::backend::tag::mpfr_ \
-            >\
-    /**/
-
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
-        (nt2)(mp)
-      , Tag
-      , boost::dispatch::tag::formal_
-      , (Tag)(A0)(A1)
-      , ((H(A0)))
-        ((H(A1)))
-      /*, ((boost::dispatch::meta::scalar_<
-            nt2::mp::meta::mp_<
-                boost::dispatch::meta::floating_<A0>
-              , Backend
-            >
-        >))
-        ((boost::dispatch::meta::scalar_<
-            nt2::mp::meta::mp_<
-                boost::dispatch::meta::floating_<A1>
-              , Backend
-            >
-        >))
-        */
-    )
-    {
-        typedef A0 result_type;
-
-        result_type operator()(A0 const & a0, A1 const & a1) const
-        {
-            std::cout << "hooray!\n";
-            return a0;
-        }
-    };
-
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
-        (nt2)(mp)
-      , nt2::tag::plus_
-      , boost::dispatch::tag::formal_
-      , (A0)(A1)(A2)
-      , ((H(A0)))
-        ((H(A1)))
-        ((H(A2)))
-      /*, ((boost::dispatch::meta::scalar_<
-            nt2::mp::meta::mp_<
-                boost::dispatch::meta::floating_<A0>
-              , Backend
-            >
-        >))
-        ((boost::dispatch::meta::scalar_<
-            nt2::mp::meta::mp_<
-                boost::dispatch::meta::floating_<A1>
-              , Backend
-            >
-        >))
-        */
-    )
-    {
-        typedef A2 result_type;
-
-        result_type operator()(A0 const & a0, A1 const & a1, A2 & a2) const
-        {
-            std::cout << "hooray!\n";
-            return a2;
-        }
-    };
-
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
-        (nt2)(mp)
-      , boost::simd::tag::terminal_
-      , boost::dispatch::tag::formal_
-      , (A0)(A1)
-      , ((boost::dispatch::meta::expr_<boost::dispatch::meta::unspecified_<A0>, nt2::mp::domain, boost::simd::tag::terminal_>))
-        ((H(A1)))//((nt2::mp::meta::mp_<boost::dispatch::meta::floating_<A1>, Backend>))
-    )
-    {
-        typedef typename boost::proto::result_of::value<A0>::type result_type;
-
-        result_type operator()(A0 const & a0, A1 & a1) const
-        {
-            return boost::proto::value(a0);
-        }
-    };
-
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
-        (nt2)(mp)
-      , boost::simd::tag::evaluate_
-      , boost::dispatch::tag::formal_
-      , (A0)(Tag)(A1)
-      , ((boost::dispatch::meta::expr_<boost::dispatch::meta::unspecified_<A0>, nt2::mp::domain, Tag>))
-        ((H(A1)))//((nt2::mp::meta::mp_<boost::dispatch::meta::floating_<A1>, Backend>))
-    )
-    {
-        typedef A1 result_type;
-
-        result_type operator()(A0 const & a0, A1 & a1) const
-        {
-            return
-                boost::dispatch::meta::compile<
-                    boost::dispatch::meta::compute<boost::mpl::_1, boost::dispatch::tag::formal_>
-                >()(a0, a1);
-        }
-    };
 }}
 
 using namespace boost::dispatch::meta;
@@ -194,7 +88,7 @@ void f(scalar_<single_<T> >, T)
 {}
 
 template <typename T>
-void f(scalar_<T>, T)
+void f(scalar_<floating_<T> >, T)
 {}
 
 template <typename T>
@@ -217,45 +111,58 @@ NT2_TEST_CASE(hierachy_of_backend_mpfr)
 
   typedef hierarchy_of<mpfr>::type base;
   
-  NT2_TEST( (is_same<mp_<floating_<mpfr>, mpfr_>, base>::value) );
-  NT2_TEST( (is_same<scalar_<floating_<mpfr> >, UP(base, 1)>::value) );
-  NT2_TEST( (is_same<scalar_<signed_<mpfr>      > , UP(base,2) >::value) );
-  NT2_TEST( (is_same<scalar_<arithmetic_<mpfr>  > , UP(base,3) >::value) );
-  NT2_TEST( (is_same<scalar_<fundamental_<mpfr> > , UP(base,4) >::value) );
-  NT2_TEST( (is_same<scalar_<unspecified_<mpfr> > , UP(base,5) >::value) );
+  NT2_TEST( (is_same<scalar_<mp_<floating_<mpfr>, mpfr_>    >, base>::value) );
+  NT2_TEST( (is_same<scalar_<mp_<signed_<mpfr>, mpfr_>      >, UP(base, 1)>::value) );
+  NT2_TEST( (is_same<scalar_<mp_<arithmetic_<mpfr>, mpfr_>  >, UP(base, 2)>::value) );
+  NT2_TEST( (is_same<scalar_<mp_<fundamental_<mpfr>, mpfr_> >, UP(base, 3)>::value) );
+  NT2_TEST( (is_same<scalar_<mp_<unspecified_<mpfr>, mpfr_> >, UP(base, 4)>::value) );
 
-  NT2_TEST( (is_same<generic_<floating_<mpfr>        > , UP(base,6) >::value) );
-  NT2_TEST( (is_same<generic_<signed_<mpfr>      > , UP(base,7) >::value) );
-  NT2_TEST( (is_same<generic_<arithmetic_<mpfr>  > , UP(base,8) >::value) );
-  NT2_TEST( (is_same<generic_<fundamental_<mpfr> > , UP(base,9) >::value) );
-  NT2_TEST( (is_same<generic_<unspecified_<mpfr> > , UP(base,10) >::value) );
-  NT2_TEST( (is_same<unspecified_<mpfr>            , UP(base,11) >::value) );
+  NT2_TEST( (is_same<scalar_<floating_<mpfr>    >, UP(base, 5)>::value) );
+  NT2_TEST( (is_same<scalar_<signed_<mpfr>      >, UP(base, 6)>::value) );
+  NT2_TEST( (is_same<scalar_<arithmetic_<mpfr>  >, UP(base, 7)>::value) );
+  NT2_TEST( (is_same<scalar_<fundamental_<mpfr> >, UP(base, 8)>::value) );
+  NT2_TEST( (is_same<scalar_<unspecified_<mpfr> >, UP(base, 9)>::value) );
 
-  std::cout << typeid(typename hierarchy_of<float_<mpfr> >::type).name() << "\n";
-  std::cout << typeid(base).name() << "\n";
+  NT2_TEST( (is_same<generic_<mp_<floating_<mpfr>, mpfr_>    > , UP(base,10) >::value) );
+  NT2_TEST( (is_same<generic_<mp_<signed_<mpfr>, mpfr_>      > , UP(base,11) >::value) );
+  NT2_TEST( (is_same<generic_<mp_<arithmetic_<mpfr>, mpfr_>  > , UP(base,12) >::value) );
+  NT2_TEST( (is_same<generic_<mp_<fundamental_<mpfr>, mpfr_> > , UP(base,13) >::value) );
+  NT2_TEST( (is_same<generic_<mp_<unspecified_<mpfr>, mpfr_> > , UP(base,14) >::value) );
+
+  NT2_TEST( (is_same<generic_<floating_<mpfr>    > , UP(base,15) >::value) );
+  NT2_TEST( (is_same<generic_<signed_<mpfr>      > , UP(base,16) >::value) );
+  NT2_TEST( (is_same<generic_<arithmetic_<mpfr>  > , UP(base,17) >::value) );
+  NT2_TEST( (is_same<generic_<fundamental_<mpfr> > , UP(base,18) >::value) );
+  NT2_TEST( (is_same<generic_<unspecified_<mpfr> > , UP(base,19) >::value) );
+  NT2_TEST( (is_same<unspecified_<mpfr>            , UP(base,20) >::value) );
+
 
   NT2_TEST((
     is_same<
-        typename hierarchy_of<float_<mpfr> >::type
+        hierarchy_of<float_<mpfr> >::type
       , expr_<
-            base
+            hierarchy_of<
+                semantic_of<
+                    float_<mpfr>
+                >::type
+            >::type
           , nt2::mp::domain
           , boost::proto::tag::plus
         >
     >::value
   ));
+  
+  std::cout << typeid(hierarchy_of<float_<mpfr> >::type).name() << "\n";
 
   float_<mpfr> x, y;
         
   BOOST_DISPATCH_DECLTYPE(x+y, type_t_);
-  typedef typename strip<type_t_>::type type_t;
-  typedef typename boost::proto::domain_of<type_t>::type domain_t;
-  typedef typename semantic_of<type_t>::type semantic_t;
-  
-  std::cout << typeid(semantic_t).name() << "\n";
+  typedef strip<type_t_>::type type_t;
+  typedef boost::proto::domain_of<type_t>::type domain_t;
+  typedef semantic_of<type_t>::type semantic_t;
 
-  NT2_TEST(( is_same< typename hierarchy_of<type_t>::type
-                    , expr_< typename hierarchy_of<semantic_t, type_t>::type
+  NT2_TEST(( is_same<hierarchy_of<type_t>::type
+                    , expr_<hierarchy_of<semantic_t, type_t>::type
                            , domain_t
                            , boost::proto::tag::plus
                            >
@@ -324,12 +231,16 @@ NT2_TEST_CASE (test_)
         mpfr f1(90.0);
         mpfr f2(90.0);
 
-        //f(f2);
+        f(f2);
 
+        /*
         mpfr f3;
-        boost::dispatch::functor<boost::proto::tag::plus>()(f1, f2);
-        //boost::dispatch::functor<boost::simd::tag::plus_>()(f1, f2);
-        //f3 = boost::dispatch::functor<boost::simd::tag::plus_>()(f1, f2);
+        boost::dispatch::functor<boost::simd::tag::plus_>()(f1, f2, f3);
+        boost::dispatch::functor<boost::simd::tag::plus_>()(f1, f2);
+        nt2::plus(f1, f2);
+        f3 = nt2::plus(f1, f2);
+        f3 = boost::dispatch::functor<boost::simd::tag::plus_>()(f1, f2);
+        */
     }
 
     using nt2::mp::float_;
@@ -339,7 +250,8 @@ NT2_TEST_CASE (test_)
         float_<mpfr> f2 = {mpfr(9.0)};
         float_<mpfr> f3;
 
-        f1 = f2 + f3;
+        f3 = f2 + f1;
+        std::cout << mpfr_get_d(boost::proto::value(f3).data, MPFR_RNDN) << "\n";
 
         /*
         f3 = f1 + f2 + f2 + f2 + f1;
@@ -356,9 +268,9 @@ NT2_TEST_CASE (test_)
         std::cout << mpfr_get_d(boost::proto::value(f3).data, MPFR_RNDN) << "\n";
 
         f1 = f2 + f3;
-
-        std::cout << typeid(f2 * f3).name() << "\n";
         */
+
+        //std::cout << typeid(f2 * f3).name() << "\n";
         //f1 = f2 * f3;
     }
 

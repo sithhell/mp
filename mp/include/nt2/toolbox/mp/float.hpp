@@ -3,7 +3,7 @@
 #define NT2_TOOLBOX_MP_FLOAT_HPP
 
 #include <boost/proto/proto.hpp>
-#include <nt2/sdk/dsl/evaluate.hpp>
+#include <nt2/dsl/functions/evaluate.hpp>
 
 namespace nt2 { namespace mp
 {
@@ -134,7 +134,7 @@ namespace boost { namespace dispatch {
         template <typename Backend>
         struct semantic_of<nt2::mp::float_<Backend> >
         {
-            typedef nt2::mp::backend::mpfr type;
+            typedef Backend type;
         };
     }
 }}

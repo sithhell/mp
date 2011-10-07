@@ -14,6 +14,29 @@ namespace nt2 { namespace mp
 
     namespace meta
     {
+        template<class T, class Origin = void>
+        struct mp_of
+        {
+            typedef boost::dispatch::meta::unspecified_<T> type;
+        };
+        
+        template<class T, class B>
+        struct mp_ : mp_<typename T::parent, B>
+        {
+            typedef mp_<typename T::parent, B> parent;
+        };
+        
+        template<class T, class B>
+        struct mp_< boost::dispatch::meta::unspecified_<T>, B >
+            : mp_of<
+                typename boost::dispatch::meta::primitive_of<T>::type
+              , T
+            >::type
+        {
+            typedef typename mp_of< typename boost::dispatch::meta::primitive_of<T>::type, T>::type parent;
+        };
+
+#if 0
         template <typename Parent>
         struct hierarchy
             : Parent
@@ -51,6 +74,7 @@ namespace nt2 { namespace mp
             >
         {};
         */
+#endif
     }
 }}
 
