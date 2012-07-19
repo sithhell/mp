@@ -30,9 +30,20 @@ As a proof of concept this library implements an adapter for
 
 Installation
 :::::::::::::::::::::::
+
     git clone git://github.com/MetaScale/nt2.git
+
     cd modules
+
     git clone git@github.com:sithhell/mp.git
+
     cd ..
+
     mkdir build
+
+    cd build
+
+    cmake ..
+
+For more information refer to: http://nt2.metascale.org/doc/html/setting_up_nt__/__nt2___github_clone.html
 
