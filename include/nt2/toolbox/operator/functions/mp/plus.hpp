@@ -11,12 +11,13 @@
 
 #include <boost/simd/toolbox/operator/include/functions/plus.hpp>
 #include <nt2/toolbox/operator/include/functions/plus.hpp>
-#include <nt2/toolbox/mpfloat/mpfloat.hpp>
+#include <nt2/toolbox/mp/float.hpp>
 
-namespace nt2 { namespace mpfloat { namespace ext
+namespace nt2 { namespace mp { namespace ext
 {
+    /*
         BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION_TPL(
-            (nt2)(mpfloat)(ext)
+            (nt2)(mp)(ext)
           , boost::simd::tag::plus_
           , boost::dispatch::tag::cpu_
           , (typename A0)(typename A1)
@@ -47,7 +48,7 @@ namespace nt2 { namespace mpfloat { namespace ext
         };
         
         BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION_TPL(
-            (nt2)(mpfloat)(ext)
+            (nt2)(mp)(ext)
           , boost::simd::tag::plus_
           , boost::dispatch::tag::cpu_
           , (typename A0)(typename A1)
@@ -76,6 +77,7 @@ namespace nt2 { namespace mpfloat { namespace ext
 
             }
         };
+        */
 
 } }}
 

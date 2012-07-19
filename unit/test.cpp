@@ -11,7 +11,7 @@
 #include <nt2/toolbox/mp/float.hpp>
 #include <nt2/toolbox/mp/evaluate.hpp>
 
-#include <boost/dispatch/dsl/compute.hpp>
+//#include <boost/dispatch/dsl/compute.hpp>
 #include <boost/dispatch/dsl/call.hpp>
 #include <boost/simd/sdk/simd/pack/call.hpp>
 
@@ -19,7 +19,7 @@
 #include <nt2/toolbox/operator/functions/multiplies.hpp>
 
 #include <iostream>
-
+#if 0
 
 namespace nt2 { namespace mp
 {
@@ -155,7 +155,8 @@ NT2_TEST_CASE(hierachy_of_backend_mpfr)
   std::cout << typeid(hierarchy_of<float_<mpfr> >::type).name() << "\n";
 
   float_<mpfr> x, y;
-        
+  
+  /*
   BOOST_DISPATCH_DECLTYPE(x+y, type_t_);
   typedef strip<type_t_>::type type_t;
   typedef boost::proto::domain_of<type_t>::type domain_t;
@@ -168,6 +169,7 @@ NT2_TEST_CASE(hierachy_of_backend_mpfr)
                            >
                     >::value
           ));
+          */
 }
 
 NT2_TEST_CASE (test_)
@@ -246,8 +248,8 @@ NT2_TEST_CASE (test_)
     using nt2::mp::float_;
 
     {
-        float_<mpfr> f1 = {mpfr(9.0)};
-        float_<mpfr> f2 = {mpfr(9.0)};
+        float_<mpfr> f1 = {{mpfr(9.0)}};
+        float_<mpfr> f2 = {{mpfr(9.0)}};
         float_<mpfr> f3;
 
         f3 = f2 + f1;
@@ -277,6 +279,7 @@ NT2_TEST_CASE (test_)
     {
         float_<mpfr> f1, f2;
 
-        nt2::plus(f1, f2);
+        //nt2::plus(f1, f2);
     }
 }
+#endif

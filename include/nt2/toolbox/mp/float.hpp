@@ -3,15 +3,23 @@
 #define NT2_TOOLBOX_MP_FLOAT_HPP
 
 #include <boost/proto/proto.hpp>
-#include <nt2/dsl/functions/evaluate.hpp>
+#include <boost/dispatch/meta/terminal_of.hpp>
+#include <nt2/include/functions/evaluate.hpp>
+#include <nt2/include/functions/schedule.hpp>
+#include <nt2/include/functions/assign.hpp>
+#include <nt2/toolbox/mp/backend/mpfr/mpfr.hpp>
 
 namespace nt2 { namespace mp
 {
     struct grammar
         : boost::proto::or_<
+          /*
             boost::proto::plus<grammar, grammar>
           , boost::proto::multiplies<grammar, grammar>
+          , boost::proto::assign<boost::proto::terminal<, grammar>
           , boost::proto::terminal<boost::proto::_>
+          */
+          boost::proto::_
         >
     {};
 
@@ -90,7 +98,10 @@ namespace nt2 { namespace mp
         float_ &operator=(Expr const & expr)
         {
             nt2::evaluate(
-                expr, boost::proto::value(*this)
+                nt2::assign(
+                    *this
+                  , expr
+                )
             );
             return *this;
         }
@@ -135,6 +146,12 @@ namespace boost { namespace dispatch {
         struct semantic_of<nt2::mp::float_<Backend> >
         {
             typedef Backend type;
+        };
+
+        template <>
+        struct terminal_of<nt2::mp::backend::mpfr>
+        {
+            typedef nt2::mp::float_<nt2::mp::backend::mpfr> type;
         };
     }
 }}

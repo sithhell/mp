@@ -2,15 +2,18 @@
 #ifndef NT2_TOOLBOX_MP_EVALUATE_HPP
 #define NT2_TOOLBOX_MP_EVALUATE_HPP
 
-#include <nt2/include/functions/compile.hpp>
-#include <nt2/include/functions/schedule.hpp>
-#include <nt2/include/functions/optimize.hpp>
+//#include <nt2/include/functions/compile.hpp>
+//#include <nt2/include/functions/schedule.hpp>
+//#include <nt2/include/functions/optimize.hpp>
+#include <nt2/dsl/functions/optimize.hpp>
+#include <nt2/dsl/functions/schedule.hpp>
+#include <nt2/dsl/functions/terminal.hpp>
 #include <nt2/toolbox/mp/hierarchy.hpp>
 #include <nt2/dsl/functions/evaluate.hpp>
 
 namespace nt2 { namespace mp {
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , boost::simd::tag::terminal_
       , boost::dispatch::tag::cpu_
@@ -27,7 +30,7 @@ namespace nt2 { namespace mp {
         }
     };
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , boost::simd::tag::evaluate_
       , boost::dispatch::tag::formal_
@@ -41,12 +44,12 @@ namespace nt2 { namespace mp {
         result_type operator()(A0 const & a0, A1 & a1) const
         {
             std::cout << "help?\n";
-            boost::simd::compile(boost::simd::schedule(boost::simd::optimize(a0)))(a0, a1);
+            //boost::simd::compile(boost::simd::schedule(boost::simd::optimize(a0)))(a0, a1);
             return a1;
         }
     };
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , boost::simd::tag::evaluate_
       , boost::dispatch::tag::formal_
@@ -59,7 +62,7 @@ namespace nt2 { namespace mp {
         result_type operator()(A0 const & a0) const
         {
             result_type a1;
-            boost::simd::compile(boost::simd::schedule(boost::simd::optimize(a0)))(a0, a1);
+            //boost::simd::compile(boost::simd::schedule(boost::simd::optimize(a0)))(a0, a1);
             return a1;
         }
     };

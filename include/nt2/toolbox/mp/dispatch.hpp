@@ -11,7 +11,7 @@ namespace nt2 { namespace mp {
     template <typename Sig, typename Site, typename Enable = void>
     struct implement;
     
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
@@ -31,7 +31,7 @@ namespace nt2 { namespace mp {
         }
     };
     
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
@@ -52,7 +52,7 @@ namespace nt2 { namespace mp {
         }
     };
     
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
@@ -73,7 +73,7 @@ namespace nt2 { namespace mp {
         }
     };
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
@@ -92,7 +92,7 @@ namespace nt2 { namespace mp {
         }
     };
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
@@ -112,7 +112,7 @@ namespace nt2 { namespace mp {
         }
     };
 
-    BOOST_DISPATCH_FUNCTOR_IMPLEMENTATION(
+    BOOST_DISPATCH_IMPLEMENT(
         (nt2)(mp)
       , Tag
       , boost::dispatch::tag::cpu_
