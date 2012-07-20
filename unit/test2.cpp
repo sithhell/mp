@@ -9,6 +9,7 @@
 #include <nt2/sdk/mp/mpfr.hpp>
 #include <nt2/sdk/mp/meta/hierarchy.hpp>
 #include <nt2/sdk/mp/mpfr/meta/hierarchy.hpp>
+#include <nt2/sdk/mp/mpfr/meta/terminal_of.hpp>
 #include <nt2/sdk/mp/functor/hierarchy.hpp>
 
 #include <nt2/dsl/functions/schedule.hpp>
@@ -132,6 +133,7 @@ NT2_TEST_CASE (plus_)
         //foo(x + y);
 
 
+        nt2::plus(x, y);
         x = y + z;
         /*
         x = y + a;
