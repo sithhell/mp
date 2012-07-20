@@ -8,11 +8,13 @@
 #ifndef NT2_SDK_MP_FLOAT_HPP
 #define NT2_SDK_MP_FLOAT_HPP
 
-#include <nt2/sdk/mp/float_fwd.hpp>
-#include <nt2/sdk/mp/expr.hpp>
 #include <nt2/sdk/mp/domain.hpp>
+#include <nt2/sdk/mp/expr.hpp>
+#include <nt2/sdk/mp/float_fwd.hpp>
 #include <nt2/sdk/mp/grammar.hpp>
+#include <nt2/sdk/mp/meta/semantic_of.hpp>
 
+#include <nt2/include/functions/assign.hpp>
 #include <nt2/include/functions/evaluate.hpp>
 
 #include <boost/dispatch/meta/terminal_of.hpp>
@@ -35,7 +37,7 @@ namespace nt2 { namespace mp
                 Backend
             >::type
           , float_<Backend>
-          , domain
+          , typename domain<Backend>
         )
 
         typedef Backend backend_type;
@@ -77,14 +79,12 @@ namespace nt2 { namespace mp
         template <typename Expr>
         float_ &operator=(Expr const & expr)
         {
-            /*
             nt2::evaluate(
                 nt2::assign(
                     *this
                   , expr
                 )
             );
-            */
             return *this;
         }
 

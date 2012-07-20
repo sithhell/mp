@@ -10,6 +10,7 @@
 
 namespace nt2 { namespace mp
 {
+    template <typename Backend>
     struct grammar;
 }}
 #endif

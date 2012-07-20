@@ -8,6 +8,8 @@
 #ifndef NT2_SDK_MP_FUNCTOR_HIERARCHY_HPP
 #define NT2_SDK_MP_FUNCTOR_HIERARCHY_HPP
 
+#include <nt2/sdk/mp/functor/preprocessor/call.hpp>
+
 namespace nt2 { namespace mp {
     template <typename Sig, typename Site, typename Enable = void>
     struct implement;

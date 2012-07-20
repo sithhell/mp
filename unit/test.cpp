@@ -169,9 +169,11 @@ NT2_TEST_CASE (test_)
     }
 
     {
+        /*
         std::cout << typeid(boost::dispatch::meta::hierarchy_of<mpfr>::type).name() << "\n";
         std::cout << typeid(boost::dispatch::meta::hierarchy_of<int>::type).name() << "\n";
         std::cout << typeid(boost::dispatch::meta::hierarchy_of<float>::type).name() << "\n";
+        */
 
         f(1.0f);
         //f(hierarchy_of<float>::type(), 1.0f);
@@ -179,7 +181,7 @@ NT2_TEST_CASE (test_)
         mpfr f1(90.0);
         mpfr f2(90.0);
 
-        f(f2);
+        //f(f2);
 
         /*
         mpfr f3;

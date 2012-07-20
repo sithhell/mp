@@ -10,7 +10,7 @@
 
 namespace nt2 { namespace mp
 {
-    template <typename Expr>
+    template <typename Expr, typename Backend>
     struct expr;
 }}
 

@@ -15,17 +15,14 @@
 #define NT2_MP_DISPATCH_FILLER_0_END
 #define NT2_MP_DISPATCH_FILLER_1_END
 
-#define NT2_MP_DISPATCH_IMPLEMENT_C_TPL_ARGS(R, D, E)                           \
-    (BOOST_PP_TUPLE_ELEM(2, 0, E))
-
 #define NT2_MP_DISPATCH_IMPLEMENT_C_HIERARCHY(R, D, E)                          \
     ((                                                                          \
         nt2::ext::scalar_<                                                      \
             nt2::mp::meta::mp_<                                                 \
                 nt2::ext::floating_<                                            \
-                    BOOST_PP_TUPLE_ELEM(2, 0, E)                                \
+                    E                                \
                 >                                                               \
-              , Backend                                                         \
+              , D                                                        \
             >                                                                   \
         >                                                                       \
     ))                                                                          \
@@ -36,16 +33,16 @@
         (nt2)(mp)                                                               \
       , Tag                                                                     \
       , boost::dispatch::tag::cpu_                                              \
-      , BOOST_PP_SEQ_FOR_EACH(NT2_MP_DISPATCH_IMPLEMENT_C_TPL_ARGS, _ Args)     \
-      , BOOST_PP_SEQ_FOR_EACH(NT2_MP_DISPATCH_IMPLEMENT_C_HIERARCHY, _ Args)    \
-    )
+      , Args \
+      , BOOST_PP_SEQ_FOR_EACH(NT2_MP_DISPATCH_IMPLEMENT_C_HIERARCHY, Backend, Args)   \
+    )                                                                           \
 /**/
 
 #define NT2_MP_DISPATCH_IMPLEMENT(Tag, Backend, Args)                           \
     NT2_MP_DISPATCH_IMPLEMENT_C(                                                \
         Tag                                                                     \
       , Backend                                                                 \
-      , BOOST_PP_CAT(NT2_MP_DISPATCH_FILLER_0 Args,_END)                        \
+      , Args                                                                    \
     )                                                                           \
 /**/
 

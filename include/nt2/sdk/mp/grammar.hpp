@@ -14,6 +14,7 @@
 
 namespace nt2 { namespace mp
 {
+    template <typename Backend>
     struct grammar
         : boost::proto::or_<
           /*
