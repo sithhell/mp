@@ -87,4 +87,43 @@ NT2_TEST_CASE(hierachy_of_backend_mpfr)
         NT2_TEST( (is_same<unspecified_<float_<mpfr> > , UP(base,25) >::value) );
         NT2_TEST( (is_same<unknown_<float_<mpfr> > , UP(base,26) >::value) );
     }
+    {
+        float_<mpfr> x, y;
+        typedef hierarchy_of<BOOST_TYPEOF(x + y)>::type base;
+        
+        NT2_TEST( (is_same<expr_<scalar_<mp_<floating_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, base>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<mp_<signed_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 1)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<mp_<arithmetic_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 2)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<mp_<fundamental_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 3)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<mp_<unspecified_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 4)>::value) );
+        
+        NT2_TEST( (is_same<expr_<scalar_<floating_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 5)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<signed_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 6)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<arithmetic_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 7)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<fundamental_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 8)>::value) );
+        NT2_TEST( (is_same<expr_<scalar_<unspecified_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l>    >, UP(base, 9)>::value) );
+        
+        NT2_TEST( (is_same<expr_<generic_<mp_<floating_<BOOST_TYPEOF(x + y) >, mpfr_>    >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,10) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<mp_<signed_<BOOST_TYPEOF(x + y) >, mpfr_>      >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,11) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<mp_<arithmetic_<BOOST_TYPEOF(x + y) >, mpfr_>  >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,12) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<mp_<fundamental_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,13) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<mp_<unspecified_<BOOST_TYPEOF(x + y) >, mpfr_> >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,14) >::value) );
+        
+        NT2_TEST( (is_same<expr_<generic_<floating_<BOOST_TYPEOF(x + y) >    >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,15) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<signed_<BOOST_TYPEOF(x + y) >      >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,16) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<arithmetic_<BOOST_TYPEOF(x + y) >  >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,17) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<fundamental_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,18) >::value) );
+        NT2_TEST( (is_same<expr_<generic_<unspecified_<BOOST_TYPEOF(x + y) > >, boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,19) >::value) );
+        NT2_TEST( (is_same<expr_<unspecified_<BOOST_TYPEOF(x + y) >           , boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,20) >::value) );
+        
+        NT2_TEST( (is_same<node_<BOOST_TYPEOF(x + y), boost::simd::tag::plus_, boost::mpl::long_<2l> > , UP(base,21) >::value) );
+        NT2_TEST( (is_same<node_<BOOST_TYPEOF(x + y), elementwise_<boost::simd::tag::plus_>, boost::mpl::long_<2l> > , UP(base,22) >::value) );
+        NT2_TEST( (is_same<node_<BOOST_TYPEOF(x + y), unspecified_<boost::simd::tag::plus_>, boost::mpl::long_<2l> > , UP(base,23) >::value) );
+        NT2_TEST( (is_same<ast_<BOOST_TYPEOF(x + y) > , UP(base,24) >::value) );
+        NT2_TEST( (is_same<unspecified_<BOOST_TYPEOF(x + y) > , UP(base,25) >::value) );
+        NT2_TEST( (is_same<unknown_<BOOST_TYPEOF(x + y) > , UP(base,26) >::value) );
+
+        std::cout << typeid(base).name() << "\n";
+        std::cout << typeid(x+y).name() << "\n";
+    }
 }
