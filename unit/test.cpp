@@ -4,6 +4,10 @@
 #include <nt2/sdk/unit/tests.hpp>
 #include <nt2/sdk/unit/module.hpp>
 
+#include <nt2/sdk/mp/float.hpp>
+#include <nt2/sdk/mp/mpfr.hpp>
+
+#if 0
 #include <nt2/toolbox/mp/dispatch.hpp>
 #include <nt2/toolbox/mp/backend/mpfr/mpfr.hpp>
 #include <nt2/toolbox/mp/backend/mpfr/tag.hpp>
@@ -17,69 +21,9 @@
 
 #include <nt2/toolbox/operator/functions/plus.hpp>
 #include <nt2/toolbox/operator/functions/multiplies.hpp>
+#endif
 
 #include <iostream>
-#if 0
-
-namespace nt2 { namespace mp
-{
-    namespace ext
-    {
-        template <typename Backend>
-        struct calc_impl<boost::simd::tag::plus_, Backend>
-        {
-            struct call
-            {
-                nt2::mp::backend::mpfr &
-                operator()(nt2::mp::backend::mpfr const & a0, nt2::mp::backend::mpfr const & a1, nt2::mp::backend::mpfr& state)
-                {
-                    std::cout << "err?\n";
-                    mpfr_add(state.data, a0.data, a1.data, MPFR_RNDN);
-                    std::cout << mpfr_get_d(state.data, MPFR_RNDN) << "\n";
-                    
-                    return state;
-                }
-                
-                template <typename T>
-                nt2::mp::backend::mpfr &
-                operator()(nt2::mp::backend::mpfr const & a0, T const & a1, nt2::mp::backend::mpfr& state)
-                {
-                    nt2::mp::backend::mpfr tmp(a1);
-                    mpfr_add(state.data, a0.data, tmp.data, MPFR_RNDN);
-                    
-                    return state;
-                }
-            };
-        };
-
-        /*
-        template <typename Backend>
-        struct calc_impl<boost::simd::tag::multiplies_, Backend>
-        {
-            struct call
-            {
-                nt2::mp::backend::mpfr &
-                operator()(nt2::mp::backend::mpfr const & a0, nt2::mp::backend::mpfr const & a1, nt2::mp::backend::mpfr& state)
-                {
-                    mpfr_add(state.data, a0.data, a1.data, MPFR_RNDN);
-                    
-                    return state;
-                }
-                
-                template <typename T>
-                nt2::mp::backend::mpfr &
-                operator()(nt2::mp::backend::mpfr const & a0, T const & a1, nt2::mp::backend::mpfr& state)
-                {
-                    nt2::mp::backend::mpfr tmp(a1);
-                    mpfr_add(state.data, a0.data, tmp.data, MPFR_RNDN);
-                    
-                    return state;
-                }
-            };
-        };
-        */
-    }
-}}
 
 using namespace boost::dispatch::meta;
 
@@ -97,6 +41,7 @@ void f(T t)
     f(typename hierarchy_of<T>::type(), t);
 }
 
+#if 0
 #define M0(z,n,t) ::parent
 #define UP(T,N) T BOOST_PP_REPEAT(N,M0,~)
 
@@ -171,12 +116,13 @@ NT2_TEST_CASE(hierachy_of_backend_mpfr)
           ));
           */
 }
+#endif
 
 NT2_TEST_CASE (test_)
 {
     std::cout << "hello world !!\n";
 
-    using nt2::mp::backend::mpfr;
+    using nt2::mp::mpfr;
 
     {
         mpfr f;
@@ -248,6 +194,7 @@ NT2_TEST_CASE (test_)
     using nt2::mp::float_;
 
     {
+        /*
         float_<mpfr> f1 = {{mpfr(9.0)}};
         float_<mpfr> f2 = {{mpfr(9.0)}};
         float_<mpfr> f3;
@@ -255,7 +202,6 @@ NT2_TEST_CASE (test_)
         f3 = f2 + f1;
         std::cout << mpfr_get_d(boost::proto::value(f3).data, MPFR_RNDN) << "\n";
 
-        /*
         f3 = f1 + f2 + f2 + f2 + f1;
 
         std::cout << mpfr_get_d(boost::proto::value(f3).data, MPFR_RNDN) << "\n";
@@ -282,4 +228,3 @@ NT2_TEST_CASE (test_)
         //nt2::plus(f1, f2);
     }
 }
-#endif

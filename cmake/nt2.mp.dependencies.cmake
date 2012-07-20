@@ -20,4 +20,4 @@ else()
   set(NT2_MP_DEPENDENCIES_EXTRA operator constant arithmetic)
 endif()
 
-set(NT2_MP_LIBRARIES nt2_toolbox_mp)
+set(NT2_MP_LIBRARIES nt2_sdk_mp)

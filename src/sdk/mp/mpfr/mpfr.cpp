@@ -1,8 +1,7 @@
 
-#include <mpfr.h>
-#include <nt2/toolbox/mp/backend/mpfr/mpfr.hpp>
+#include <nt2/sdk/mp/mpfr/mpfr.hpp>
 
-namespace nt2 { namespace mp { namespace backend
+namespace nt2 { namespace mp
 {
     mpfr::mpfr()
     {
@@ -118,4 +117,4 @@ namespace nt2 { namespace mp { namespace backend
     {
         mpfr_swap(f0.data, f1.data);
     }
-}}}
+}}

@@ -1,12 +1,20 @@
+//==============================================================================
+//         Copyright 2012 & onward Thomas Heller
+//
+//          Distributed under the Boost Software License, Version 1.0.
+//                 See accompanying file LICENSE.txt or copy at
+//                     http://www.boost.org/LICENSE_1_0.txt
+//==============================================================================
+#ifndef NT2_SDK_MP_MPFR_MPFR_HPP
+#define NT2_SDK_MP_MPFR_MPFR_HPP
 
-#ifndef NT2_TOOLBOX_MP_BACKEND_MPFR_MPFR_HPP
-#define NT2_TOOLBOX_MP_BACKEND_MPFR_MPFR_HPP
+#include <nt2/sdk/mp/mpfr/mpfr_fwd.hpp>
 
 //#include <boost/cstdint.hpp>
 #include <mpfr.h>
 #include <string>
 
-namespace nt2 { namespace mp { namespace backend
+namespace nt2 { namespace mp
 {
     ////////////////////////////////////////////////////////////////////////////
     // Lightweight wrapper around mpfr_t:
@@ -86,6 +94,6 @@ namespace nt2 { namespace mp { namespace backend
     ////////////////////////////////////////////////////////////////////////////
 
     void swap(mpfr & f0, mpfr & f1);
-}}}
+}}
 
 #endif

@@ -9,9 +9,11 @@
 #ifndef NT2_TOOLBOX_ARITHMETIC_FUNCTIONS_MPFR_PLUS_HPP_INCLUDED
 #define NT2_TOOLBOX_ARITHMETIC_FUNCTIONS_MPFR_PLUS_HPP_INCLUDED
 
+/*
 #include <boost/simd/toolbox/operator/include/functions/plus.hpp>
 #include <nt2/toolbox/operator/include/functions/plus.hpp>
 #include <nt2/toolbox/mp/float.hpp>
+*/
 
 namespace nt2 { namespace mp { namespace ext
 {

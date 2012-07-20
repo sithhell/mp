@@ -1,5 +1,5 @@
 
-nt2_module_use_modules(unit)
+nt2_module_use_modules(unit mp)
 
 SET( SOURCES
     test.cpp

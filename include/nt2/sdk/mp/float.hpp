@@ -1,45 +1,25 @@
+//==============================================================================
+//         Copyright 2012 & onward Thomas Heller
+//
+//          Distributed under the Boost Software License, Version 1.0.
+//                 See accompanying file LICENSE.txt or copy at
+//                     http://www.boost.org/LICENSE_1_0.txt
+//==============================================================================
+#ifndef NT2_SDK_MP_FLOAT_HPP
+#define NT2_SDK_MP_FLOAT_HPP
 
-#ifndef NT2_TOOLBOX_MP_FLOAT_HPP
-#define NT2_TOOLBOX_MP_FLOAT_HPP
+#include <nt2/sdk/mp/float_fwd.hpp>
+#include <nt2/sdk/mp/expr.hpp>
+#include <nt2/sdk/mp/domain.hpp>
+#include <nt2/sdk/mp/grammar.hpp>
 
-#include <boost/proto/proto.hpp>
-#include <boost/dispatch/meta/terminal_of.hpp>
 #include <nt2/include/functions/evaluate.hpp>
-#include <nt2/include/functions/schedule.hpp>
-#include <nt2/include/functions/assign.hpp>
-#include <nt2/toolbox/mp/backend/mpfr/mpfr.hpp>
+
+#include <boost/dispatch/meta/terminal_of.hpp>
+#include <boost/proto/proto.hpp>
 
 namespace nt2 { namespace mp
 {
-    struct grammar
-        : boost::proto::or_<
-          /*
-            boost::proto::plus<grammar, grammar>
-          , boost::proto::multiplies<grammar, grammar>
-          , boost::proto::assign<boost::proto::terminal<, grammar>
-          , boost::proto::terminal<boost::proto::_>
-          */
-          boost::proto::_
-        >
-    {};
-
-    template <typename Expr>
-    struct expr;
- 
-    struct domain
-        : boost::proto::domain<boost::proto::pod_generator<expr>, grammar>
-    {};
-
-    template <typename Expr>
-    struct expr
-    {
-        BOOST_PROTO_BASIC_EXTENDS(
-            Expr
-          , expr
-          , domain
-        )
-    };
-
     ////////////////////////////////////////////////////////////////////////////
     // float_:
     //
@@ -47,7 +27,7 @@ namespace nt2 { namespace mp
     // system.
     //
     ////////////////////////////////////////////////////////////////////////////
-    template <typename Backend, typename Dummy = boost::proto::is_proto_expr>
+    template <typename Backend, typename>
     struct float_
     {
         BOOST_PROTO_BASIC_EXTENDS(
@@ -97,12 +77,14 @@ namespace nt2 { namespace mp
         template <typename Expr>
         float_ &operator=(Expr const & expr)
         {
+            /*
             nt2::evaluate(
                 nt2::assign(
                     *this
                   , expr
                 )
             );
+            */
             return *this;
         }
 
@@ -131,29 +113,6 @@ namespace nt2 { namespace mp
         
     };
 
-}}
-
-namespace boost { namespace dispatch {
-    namespace meta
-    {
-        template <typename Expression>
-        struct semantic_of<nt2::mp::expr<Expression> >
-        {
-            typedef nt2::mp::backend::mpfr type;
-        };    
-        
-        template <typename Backend>
-        struct semantic_of<nt2::mp::float_<Backend> >
-        {
-            typedef Backend type;
-        };
-
-        template <>
-        struct terminal_of<nt2::mp::backend::mpfr>
-        {
-            typedef nt2::mp::float_<nt2::mp::backend::mpfr> type;
-        };
-    }
 }}
 
 #endif

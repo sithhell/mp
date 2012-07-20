@@ -1,21 +1,22 @@
+//==============================================================================
+//         Copyright 2012 & onward Thomas Heller
+//
+//          Distributed under the Boost Software License, Version 1.0.
+//                 See accompanying file LICENSE.txt or copy at
+//                     http://www.boost.org/LICENSE_1_0.txt
+//==============================================================================
+#ifndef NT2_SDK_MP_MPFR_META_HIERARCHY_HPP
+#define NT2_SDK_MP_MPFR_META_HIERARCHY_HPP
 
-#ifndef NT2_TOOLBOX_MP_BACKEND_MPFR_HIERARCHY_HPP
-#define NT2_TOOLBOX_MP_BACKEND_MPFR_HIERARCHY_HPP
-
-#include <nt2/toolbox/mp/hierarchy.hpp>
+#include <nt2/sdk/mp/meta/hierarchy.hpp>
+#include <nt2/sdk/mp/mpfr/tag_fwd.hpp>
+#include <nt2/sdk/mp/mpfr/mpfr_fwd.hpp>
 
 namespace nt2 { namespace mp {
-    namespace backend { 
-        namespace tag {
-            struct mpfr_;
-        }
-        struct mpfr;
-    }
-    
     namespace meta
     {
         template<class Origin>
-        struct mp_of<backend::mpfr, Origin>
+        struct mp_of<mpfr, Origin>
         {
             typedef boost::dispatch::meta::floating_<Origin> type;
         };
@@ -25,19 +26,19 @@ namespace nt2 { namespace mp {
 namespace boost { namespace dispatch { namespace meta {
     
     template<class Origin>
-    struct property_of<nt2::mp::backend::mpfr, Origin>
+    struct property_of<nt2::mp::mpfr, Origin>
     {
         typedef nt2::mp::meta::mp_<
-            typename nt2::mp::meta::mp_of<nt2::mp::backend::mpfr, Origin>::type
-          , nt2::mp::backend::tag::mpfr_
+            typename nt2::mp::meta::mp_of<nt2::mp::mpfr, Origin>::type
+          , nt2::mp::tag::mpfr_
         > type;
     };
     
     template<class Origin>
-    struct hierarchy_of<nt2::mp::backend::mpfr, Origin>
+    struct hierarchy_of<nt2::mp::mpfr, Origin>
     {
         typedef
-            scalar_< typename property_of<nt2::mp::backend::mpfr, Origin>::type >
+            scalar_< typename property_of<nt2::mp::mpfr, Origin>::type >
             type;
     };
     /*
