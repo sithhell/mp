@@ -1,8 +1,16 @@
+//==============================================================================
+// Copyright 2012 & onward Thomas Heller
+//
+// Distributed under the Boost Software License, Version 1.0. See accompanying
+// file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt
+//==============================================================================
 
-#include <nt2/sdk/mp/mpfr/mpfr.hpp>
+#include <mp/mpfr/mpfr.hpp>
 
-namespace nt2 { namespace mp
+namespace mp
 {
+    std::size_t mpfr::copy_count = 0;
+
     mpfr::mpfr()
     {
         mpfr_init(data);
@@ -11,6 +19,7 @@ namespace nt2 { namespace mp
     mpfr::mpfr(mpfr const & value, mpfr_rnd_t rnd)
     {
         mpfr_init_set(data, value.data, rnd);
+        ++copy_count;
     }
 
     mpfr::mpfr(mpfr_t const & value, mpfr_rnd_t rnd)
@@ -113,8 +122,13 @@ namespace nt2 { namespace mp
         return *this;
     }
 
+    bool mpfr::operator==(mpfr const & o) const
+    {
+        return mpfr_cmp(data, o.data) == 0;
+    }
+
     void swap(mpfr & f0, mpfr & f1)
     {
         mpfr_swap(f0.data, f1.data);
     }
-}}
+}

@@ -1,28 +1,36 @@
-################################################################################
-#         Copyright 2003 & onward LASMEA UMR 6602 CNRS/Univ. Clermont II
-#         Copyright 2009 & onward LRI    UMR 8623 CNRS/Univ Paris Sud XI
-#         Copyright 2012 & onward        Thomas Heller
+#==============================================================================
+# Copyright 2012 & onward Thomas Heller
 #
-#          Distributed under the Boost Software License, Version 1.0.
-#                 See accompanying file LICENSE.txt or copy at
-#                     http://www.boost.org/LICENSE_1_0.txt
-################################################################################
+# Distributed under the Boost Software License, Version 1.0. See accompanying
+# file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt
+#==============================================================================
 
 cmake_minimum_required(VERSION 2.6)
 
-if(NOT DEFINED NT2_SOURCE_ROOT AND DEFINED ENV{NT2_SOURCE_ROOT})
-  set(NT2_SOURCE_ROOT $ENV{NT2_SOURCE_ROOT})
-endif()
-if(NOT DEFINED NT2_ROOT AND DEFINED ENV{NT2_ROOT})
-  set(NT2_ROOT $ENV{NT2_ROOT})
-endif()
-if(DEFINED NT2_SOURCE_ROOT)
-  list(APPEND CMAKE_MODULE_PATH ${NT2_SOURCE_ROOT}/cmake)
-endif()
-if(DEFINED NT2_ROOT)
-  list(APPEND CMAKE_MODULE_PATH ${NT2_ROOT}/cmake)
-endif()
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+find_path(MPFR_INCLUDE_DIR mpfr.h)
+find_library(MPFR_LIBRARY mpfr)
+mark_as_advanced(MPFR_INCLUDE_DIR MPFR_LIBRARY)
+
+find_package(Boost)
+
+include_directories(${MPFR_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
+
+set(MP_LIBRARY_SOURCES
+    src/mpfr/mpfr.cpp
+)
 
 
-include(NT2Module)
-nt2_module_main(mp)
+add_library(mp ${MP_LIBRARY_SOURCES})
+target_link_libraries(mp ${Boost_LIBRARIES} ${MPFR_LIBRARY})
+
+set(MP_TEST_SOURCES
+    test
+)
+
+foreach(test ${MP_TEST_SOURCES})
+    add_executable(${test} unit/${test}.cpp)
+    target_link_libraries(${test} mp)
+endforeach()

@@ -1,17 +1,15 @@
-
 //==============================================================================
-//         Copyright 2012 & onward Thomas Heller
+// Copyright 2012 & onward Thomas Heller
 //
-//          Distributed under the Boost Software License, Version 1.0.
-//                 See accompanying file LICENSE.txt or copy at
-//                     http://www.boost.org/LICENSE_1_0.txt
+// Distributed under the Boost Software License, Version 1.0. See accompanying
+// file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_MP_FLOAT_FWD_HPP
-#define NT2_SDK_MP_FLOAT_FWD_HPP
+#ifndef MP_MP_FWD_HPP
+#define MP_MP_FWD_HPP
 
 #include <boost/proto/proto_fwd.hpp>
 
-namespace nt2 { namespace mp
+namespace mp
 {
     ////////////////////////////////////////////////////////////////////////////
     // float_:
@@ -21,7 +19,7 @@ namespace nt2 { namespace mp
     //
     ////////////////////////////////////////////////////////////////////////////
     template <typename Backend, typename Dummy = boost::proto::is_proto_expr>
-    struct float_;
-}}
+    struct mp_;
+}
 
 #endif

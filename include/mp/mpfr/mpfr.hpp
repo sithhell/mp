@@ -1,20 +1,21 @@
 //==============================================================================
-//         Copyright 2012 & onward Thomas Heller
+// Copyright 2012 & onward Thomas Heller
 //
-//          Distributed under the Boost Software License, Version 1.0.
-//                 See accompanying file LICENSE.txt or copy at
-//                     http://www.boost.org/LICENSE_1_0.txt
+// Distributed under the Boost Software License, Version 1.0. See accompanying
+// file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
-#ifndef NT2_SDK_MP_MPFR_MPFR_HPP
-#define NT2_SDK_MP_MPFR_MPFR_HPP
 
-#include <nt2/sdk/mp/mpfr/mpfr_fwd.hpp>
+#ifndef MP_MPFR_MPFR_HPP
+#define MP_MPFR_MPFR_HPP
+
+#include <mp/mpfr/mpfr_fwd.hpp>
 
 //#include <boost/cstdint.hpp>
 #include <mpfr.h>
 #include <string>
+#include <iostream>
 
-namespace nt2 { namespace mp
+namespace mp
 {
     ////////////////////////////////////////////////////////////////////////////
     // Lightweight wrapper around mpfr_t:
@@ -89,11 +90,25 @@ namespace nt2 { namespace mp
         mpfr & operator=(long double value);
         mpfr & operator=(std::string const & value);
 
+        bool operator==(mpfr const &) const;
+
         mpfr_t data;
+
+        template <typename Tag>
+        struct evaluate;
+
+        static std::size_t copy_count;
     };
     ////////////////////////////////////////////////////////////////////////////
 
     void swap(mpfr & f0, mpfr & f1);
-}}
+
+    inline std::ostream & operator<<(std::ostream & os, mpfr const & m)
+    {
+        float tmp = mpfr_get_flt(m.data, MPFR_RNDN);
+        os << tmp;
+        return os;
+    }
+}
 
 #endif
