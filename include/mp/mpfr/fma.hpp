@@ -9,13 +9,13 @@
 #ifndef MP_MPFR_FMA_HPP
 #define MP_MPFR_FMA_HPP
 
-#include <mp/grammar.hpp>
-#include <mp/domain.hpp>
+#include <mp/optimize.hpp>
 #include <mp/mpfr/mpfr.hpp>
-#include <boost/proto/tags.hpp>
-#include <boost/proto/matches.hpp>
 
 #include <boost/utility/enable_if.hpp>
+
+#include <boost/proto/matches.hpp>
+#include <boost/proto/traits.hpp>
 
 namespace mp
 {
@@ -57,37 +57,14 @@ namespace mp
             boost::proto::matches<Expr, detail::fma_grammar>
         >::type
     >
-        : boost::proto::when<
+        : optimizer<
             detail::fma_grammar
-          , boost::proto::call<
-                mpfr::evaluate<tag::fma>(
-                    boost::proto::_data
-                  , boost::proto::lazy<
-                        boost::proto::_state(
-                            boost::proto::_child_c<0>(boost::proto::_child_c<0>)
-                          , int()
-                          , boost::proto::_data
-                        )
-                    >
-                  , boost::proto::lazy<
-                        boost::proto::_state(
-                            boost::proto::_child_c<1>(boost::proto::_child_c<0>)
-                          , int()
-                          , boost::proto::_data
-                        )
-                    >
-                  , boost::proto::lazy<
-                        boost::proto::_state(
-                            boost::proto::_child_c<1>
-                          , int()
-                          , boost::proto::_data
-                        )
-                    >
-                )
-            >
+          , mpfr::evaluate<tag::fma>
+          , boost::proto::_child_c<0>(boost::proto::_child_c<0>)
+          , boost::proto::_child_c<1>(boost::proto::_child_c<0>)
+          , boost::proto::_child_c<1>
         >
     {
-        typedef void is_optimize;
     };
 }
 

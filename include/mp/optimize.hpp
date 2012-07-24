@@ -20,9 +20,6 @@
 
 namespace mp {
 
-    template <typename Backend>
-    struct optimizer;
-
     namespace detail
     {
         template <typename Backend, typename Expr>
@@ -41,6 +38,44 @@ namespace mp {
             typedef boost::mpl::bool_<value> type;
         };
     }
+
+    template <typename Grammar, typename F, typename A0 = void, typename A1 = void, typename A2 = void, typename Dummy = void>
+    struct optimizer;
+
+    template <typename Grammar, typename F, typename A0, typename A1, typename A2>
+    struct optimizer<Grammar, F, A0, A1, A2>
+        : boost::proto::when<
+            Grammar
+          , boost::proto::call<
+                F(
+                    boost::proto::_data
+                  , boost::proto::lazy<
+                        boost::proto::_state(
+                            A0
+                          , int()
+                          , boost::proto::_data
+                        )
+                    >
+                  , boost::proto::lazy<
+                        boost::proto::_state(
+                            A1
+                          , int()
+                          , boost::proto::_data
+                        )
+                    >
+                  , boost::proto::lazy<
+                        boost::proto::_state(
+                            A2
+                          , int()
+                          , boost::proto::_data
+                        )
+                    >
+                )
+            >
+        >
+    {
+        typedef void is_optimize;
+    };
 }
 
 #endif
