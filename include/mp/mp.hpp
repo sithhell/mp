@@ -11,8 +11,11 @@
 #include <mp/expr.hpp>
 #include <mp/mp_fwd.hpp>
 #include <mp/grammar.hpp>
+#include <mp/optimize.hpp>
 
 #include <boost/proto/proto.hpp>
+
+#include <iostream>
 
 namespace mp
 {
@@ -36,7 +39,7 @@ namespace mp
         typedef Backend backend_type;
         
         mp_()
-            : base_type(typename boost::proto::terminal<Backend>::type())
+            : base_type(terminal_type())
         {}
 
         mp_(mp_ const & expr)
@@ -44,7 +47,7 @@ namespace mp
         {}
 
         explicit mp_(Backend const & backend)
-            : base_type(typename boost::proto::terminal<Backend>::type(backend))
+            : base_type(terminal_type(backend))
         {}
 
         template <typename T>
@@ -104,24 +107,45 @@ namespace mp
         #undef MP_MAKE_ASSIGN_OP
         
         ////////////////////////////////////////////////////////////////////////
-        
-        bool operator==(mp_ const & o)
-        {
-            return boost::proto::value(*this) == boost::proto::value(o);
-        }
-        
-        bool operator==(Backend const & o)
-        {
-            return boost::proto::value(*this) == boost::proto::value(o);
-        }
     };
+    
+    template <typename Backend>
+    bool operator==(mp_<Backend> const & lhs, mp_<Backend> const & rhs)
+    {
+        return boost::proto::value(lhs) == boost::proto::value(rhs);
+    }
+    
+    template <typename Backend>
+    bool operator==(mp_<Backend> const & lhs, Backend const & rhs)
+    {
+        return boost::proto::value(lhs) == rhs;
+    }
+    
+    template <typename Backend>
+    bool operator==(Backend const & lhs, mp_<Backend> const & rhs)
+    {
+        return lhs == boost::proto::value(rhs);
+    }
+    
+    template <typename Backend, typename T>
+    bool operator==(mp_<Backend> const & lhs, T const & rhs)
+    {
+        return boost::proto::value(lhs) == Backend(rhs);
+    }
+    
+    template <typename Backend, typename T>
+    bool operator==(T const & lhs, mp_<Backend> const & rhs)
+    {
+        return Backend(lhs) == boost::proto::value(rhs);
+    }
 
     template <typename Backend>
     std::ostream & operator<<(std::ostream & os, mp_<Backend> const & m)
     {
         os << boost::proto::value(m);
-    }
 
+        return os;
+    }
 }
 
 #endif

@@ -9,7 +9,9 @@
 
 #include <mp/domain.hpp>
 #include <mp/expr_fwd.hpp>
+#include <mp/optimize.hpp>
 
+#include <boost/typeof/typeof.hpp>
 #include <boost/proto/extends.hpp>
 
 namespace mp
@@ -28,6 +30,12 @@ namespace mp
 
         expr(Expr const & expr) : base_type(expr) {}
 
+        operator Backend() const
+        {
+            Backend b;
+            grammar<Backend>()(*this, 0, b);
+            return b;
+        }
     };
 }
 

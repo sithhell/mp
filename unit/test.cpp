@@ -5,6 +5,8 @@
 // file LICENSE.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 //==============================================================================
 
+#include <iostream>
+
 #include <mp/mp.hpp>
 #include <mp/mpfr.hpp>
 
@@ -23,25 +25,100 @@ int main()
                 , e(5.0)
                 , f(6.0)
                 , g(7.0)
-                , h(8.0)
-                , i(9.0)
-                , j(10.0)
-                , k(11.0)
-                , l(12.0)
-                , m(13.0)
-                , n(14.0)
-                , o(15.0)
-                , p(16.0);
+                , h(8.0);
+
+        mpfr x;
 
         mpfr::copy_count = 0;
 
         a = b + c;
-        BOOST_TEST_EQ(boost::proto::value(a), mpfr(5.0));
+        BOOST_TEST_EQ(a, 5.0);
         a = b + c + d;
-        BOOST_TEST_EQ(boost::proto::value(a), mpfr(9.0));
+        BOOST_TEST_EQ(a, 9.0);
         a = b + c + d + e;
-        BOOST_TEST_EQ(boost::proto::value(a), mpfr(14.0));
+        BOOST_TEST_EQ(a, 14.0);
+        a = b + c + d + e + f;
+        BOOST_TEST_EQ(a, 20.0);
+        a = b + c + d + e + f + g;
+        BOOST_TEST_EQ(a, 27.0);
+        a = b + c + d + e + f + g + h;
+        BOOST_TEST_EQ(a, 35.0);
+        a = 10 + b + c + d + e + f + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + 10 + c + d + e + f + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + 10 + d + e + f + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + d + 10 + e + f + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + d + e + 10 + f + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + d + e + f + 10 + g + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + d + e + f + g + 10 + h;
+        BOOST_TEST_EQ(a, 45.0);
+        a = b + c + d + e + f + g + h + 10;
+        BOOST_TEST_EQ(a, 45.0);
 
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
+        
+        x = b + c;
+        BOOST_TEST_EQ(x, 5.0);
+        x = b + c + d;
+        BOOST_TEST_EQ(x, 9.0);
+        x = b + c + d + e;
+        BOOST_TEST_EQ(x, 14.0);
+        x = b + c + d + e + f;
+        BOOST_TEST_EQ(x, 20.0);
+        x = b + c + d + e + f + g;
+        BOOST_TEST_EQ(x, 27.0);
+        x = b + c + d + e + f + g + h;
+        BOOST_TEST_EQ(x, 35.0);
+        x = 10 + b + c + d + e + f + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + 10 + c + d + e + f + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + 10 + d + e + f + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + d + 10 + e + f + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + d + e + 10 + f + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + d + e + f + 10 + g + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + d + e + f + g + 10 + h;
+        BOOST_TEST_EQ(x, 45.0);
+        x = b + c + d + e + f + g + h + 10;
+        BOOST_TEST_EQ(x, 45.0);
+
+        BOOST_TEST_EQ(mpfr::copy_count, 28);
+        mpfr::copy_count = 0;
+
+        a = b * c;
+        BOOST_TEST_EQ(a, 6.0);
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
+
+        mpfr::copy_count = 0;
+        a = (b * c) + d;
+        BOOST_TEST_EQ(a, 10.0);
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
+
+        mpfr::copy_count = 0;
+        a = ((b * c) + d) + e;
+        BOOST_TEST_EQ(a, 15.0);
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
+        
+        mpfr::copy_count = 0;
+        a = (e * b) * c + d;
+        BOOST_TEST_EQ(a, 34.0);
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
+
+
+        //BOOST_TEST_EQ(mpfr::copy_count, 27);
+
+        mpfr::copy_count = 0;
+        a = (b * c) + d;
+        BOOST_TEST_EQ(a, 10.0);
         BOOST_TEST_EQ(mpfr::copy_count, 0);
     }
 

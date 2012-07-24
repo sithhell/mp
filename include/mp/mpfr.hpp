@@ -9,5 +9,7 @@
 
 #include <mp/mpfr/mpfr.hpp>
 #include <mp/mpfr/plus.hpp>
+#include <mp/mpfr/multiplies.hpp>
+#include <mp/mpfr/fma.hpp>
 
 #endif

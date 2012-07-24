@@ -8,6 +8,7 @@
 #define MP_GRAMMAR_HPP
 
 #include <mp/grammar_fwd.hpp>
+#include <mp/evaluate.hpp>
 
 #include <boost/proto/proto.hpp>
 
@@ -15,61 +16,6 @@
 
 namespace mp
 {
-    template <typename Backend>
-    struct grammar;
-
-    template <typename Backend>
-    struct evaluate
-    {
-        typedef Backend & result_type;
-        
-        Backend & operator()(boost::proto::tag::terminal, Backend & t, Backend &) const
-        {
-            return t;
-        }
-
-        template <typename Tag, typename T>
-        Backend & operator()(Tag, T const & t, Backend & b) const
-        {
-            return eval(Tag(), t, b, typename boost::proto::arity_of<T>::type());
-        }
-
-        template <typename Tag, typename T>
-        Backend & eval(Tag, T const & t, Backend & b, boost::mpl::long_<1>) const
-        {
-            return evaluate<Backend>::call(Tag(), grammar<Backend>()(t, 0, b));
-        }
-
-        template <typename Tag, typename T>
-        Backend & eval(Tag, T const & t, Backend & b, boost::mpl::long_<2>) const
-        {
-            typename Backend::template evaluate<Tag> eval;
-            return
-                eval(
-                    b
-                  , grammar<Backend>()(
-                        boost::proto::child_c<0>(t)
-                      , 0
-                      , b
-                    )
-                  , grammar<Backend>()(
-                        boost::proto::child_c<1>(t)
-                      , 0
-                      , b
-                    )
-                );
-        }
-
-        /*
-        template <typename Tag, typename... A>
-        static Backend & call(Tag, Backend & b, A...)
-        {
-            std::cout << typeid(Tag).name() << "\n";
-            return b;
-        }
-        */
-    };
-
     template <typename Backend>
     struct grammar
         : boost::proto::switch_<grammar<Backend> >

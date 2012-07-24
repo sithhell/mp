@@ -37,6 +37,11 @@ namespace mp
         mpfr_init_set_si(data, value, rnd);
     }
     
+    mpfr::mpfr(int value, mpfr_rnd_t rnd)
+    {
+        mpfr_init_set_si(data, value, rnd);
+    }
+    
     mpfr::mpfr(float value, mpfr_rnd_t rnd)
     {
         mpfr_init(data);
@@ -63,13 +68,15 @@ namespace mp
 
     mpfr::~mpfr()
     {
-        mpfr_clear(data);
+        if(data[0]._mpfr_d)
+            mpfr_clear(data);
     }
         
     mpfr & mpfr::operator=(mpfr const & value)
     {
         mpfr tmp(value);
         swap(*this, tmp);
+        ++copy_count;
         return *this;
     }
         
@@ -88,6 +95,13 @@ namespace mp
     }
 
     mpfr & mpfr::operator=(long int value)
+    {
+        mpfr tmp(value);
+        swap(*this, tmp);
+        return *this;
+    }
+
+    mpfr & mpfr::operator=(int value)
     {
         mpfr tmp(value);
         swap(*this, tmp);
@@ -122,9 +136,9 @@ namespace mp
         return *this;
     }
 
-    bool mpfr::operator==(mpfr const & o) const
+    bool operator==(mpfr const & lhs, mpfr const & rhs)
     {
-        return mpfr_cmp(data, o.data) == 0;
+        return mpfr_cmp(lhs.data, rhs.data) == 0;
     }
 
     void swap(mpfr & f0, mpfr & f1)
