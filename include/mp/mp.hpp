@@ -22,6 +22,24 @@
 
 namespace mp
 {
+    namespace detail
+    {
+        template <typename T>
+        struct strip { typedef T type; };
+        template <typename T>
+        struct strip<T const> { typedef T type; };
+        template <typename T>
+        struct strip<T const &> { typedef T type; };
+        template <typename T>
+        struct strip<T &> { typedef T type; };
+#ifndef BOOST_HAS_NO_RVALUE_REFERENCES
+        template <typename T>
+        struct strip<T const &&> { typedef T type; };
+        template <typename T>
+        struct strip<T &&> { typedef T type; };
+#endif
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // mp_:
     //
@@ -62,7 +80,14 @@ namespace mp
         {}
 
         template <typename T>
-        mp_(BOOST_FWD_REF(T) t)
+        mp_(BOOST_FWD_REF(T) t
+          , typename boost::disable_if<
+                typename boost::is_same<
+                    typename detail::strip<T>::type
+                  , mp_<Backend>
+                >::type
+            >::type * = 0
+        )
             : base_type(
                 boost::proto::make_expr<boost::proto::tag::terminal>(
                     Backend(boost::forward<T>(t))

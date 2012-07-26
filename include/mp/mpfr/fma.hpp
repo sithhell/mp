@@ -1,4 +1,3 @@
-
 //==============================================================================
 // Copyright 2012 & onward Thomas Heller
 //
@@ -21,13 +20,23 @@ namespace mp
 {
     namespace detail
     {
-        struct fma_grammar
+        struct fma_grammar_1
             : boost::proto::plus<
                 boost::proto::multiplies<
                     boost::proto::_
                   , boost::proto::_
                 >
               , boost::proto::_
+            >
+        {};
+        
+        struct fma_grammar_2
+            : boost::proto::plus<
+                boost::proto::_
+              , boost::proto::multiplies<
+                    boost::proto::_
+                  , boost::proto::_
+                >
             >
         {};
     }
@@ -54,15 +63,38 @@ namespace mp
     <
         Expr
       , typename boost::enable_if<
-            boost::proto::matches<Expr, detail::fma_grammar>
+            boost::proto::matches<Expr, detail::fma_grammar_1>
         >::type
     >
         : optimizer<
-            detail::fma_grammar
+            detail::fma_grammar_1
           , mpfr::evaluate<tag::fma>
           , boost::proto::_child_c<0>(boost::proto::_child_c<0>)
           , boost::proto::_child_c<1>(boost::proto::_child_c<0>)
           , boost::proto::_child_c<1>
+        >
+    {
+    };
+
+    template <typename Expr>
+    struct mpfr::optimize
+    <
+        Expr
+      , typename boost::enable_if<
+            boost::mpl::and_<
+                boost::proto::matches<Expr, detail::fma_grammar_2>
+              , boost::mpl::not_<
+                    boost::proto::matches<Expr, detail::fma_grammar_1>
+                >
+            >
+        >::type
+    >
+        : optimizer<
+            detail::fma_grammar_2
+          , mpfr::evaluate<tag::fma>
+          , boost::proto::_child_c<0>(boost::proto::_child_c<1>)
+          , boost::proto::_child_c<1>(boost::proto::_child_c<1>)
+          , boost::proto::_child_c<0>
         >
     {
     };

@@ -71,7 +71,7 @@ namespace mp
 
     mpfr::~mpfr()
     {
-        if(data[0]._mpfr_d)
+        if(MPFR_MANT(data))
             mpfr_clear(data);
     }
         

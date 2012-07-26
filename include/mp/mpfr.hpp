@@ -14,6 +14,7 @@
 #include <mp/mpfr/multiplies.hpp>
 #include <mp/mpfr/divides.hpp>
 #include <mp/mpfr/fma.hpp>
+#include <mp/mpfr/fms.hpp>
 #include <mp/mpfr/exp.hpp>
 #include <mp/mpfr/pow.hpp>
 #include <mp/mpfr/fmod.hpp>

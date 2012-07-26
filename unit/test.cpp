@@ -91,7 +91,7 @@ int main()
         x = b + c + d + e + f + g + h + 10;
         BOOST_TEST_EQ(x, 45.0);
 
-        BOOST_TEST_EQ(mpfr::copy_count, 28);
+        BOOST_TEST_EQ(mpfr::copy_count, 0);
 
         mpfr::copy_count = 0;
         a = b * c;
@@ -118,6 +118,8 @@ int main()
 
         mpfr::copy_count = 0;
         a = (b * c) + d;
+        BOOST_TEST_EQ(a, 10.0);
+        a = d + (b * c);
         BOOST_TEST_EQ(a, 10.0);
         BOOST_TEST_EQ(mpfr::copy_count, 0);
 
