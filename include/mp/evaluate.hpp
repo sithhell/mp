@@ -129,8 +129,67 @@ namespace mp {
         {
             typedef Backend type;
         };
+
+        template <typename This, typename T>
+        struct result<This(boost::proto::tag::terminal const &, T &, Backend &)>
+        {
+            typedef Backend type;
+        };
+        
+        template <typename This, typename T>
+        struct result<This(boost::proto::tag::terminal &, T &, Backend &)>
+        {
+            typedef Backend type;
+        };
+        
+        template <typename This, typename T>
+        struct result<This(boost::proto::tag::terminal, T &, Backend &)>
+        {
+            typedef Backend type;
+        };
+        
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal const &, Backend const &, Backend &)>
+        {
+            typedef Backend const & type;
+        };
+        
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal &, Backend const &, Backend &)>
+        {
+            typedef Backend const & type;
+        };
+        
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal, Backend const &, Backend &)>
+        {
+            typedef Backend const & type;
+        };
+
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal const &, Backend &, Backend &)>
+        {
+            typedef Backend & type;
+        };
+        
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal &, Backend &, Backend &)>
+        {
+            typedef Backend & type;
+        };
+        
+        template <typename This>
+        struct result<This(boost::proto::tag::terminal, Backend &, Backend &)>
+        {
+            typedef Backend & type;
+        };
         
         Backend & operator()(boost::proto::tag::terminal, Backend & t, Backend &) const
+        {
+            return t;
+        }
+        
+        Backend const & operator()(boost::proto::tag::terminal, Backend const & t, Backend &) const
         {
             return t;
         }
@@ -199,7 +258,7 @@ namespace mp {
         ) const
         {
             typename Backend::template evaluate<Tag> f;
-            return f(b, grammar<Backend>()(t, 0, b));
+            return f(b, grammar<Backend>()(boost::proto::child_c<0>(t), 0, b));
         }
 
         template <typename Tag, typename T>

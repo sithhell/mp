@@ -116,6 +116,11 @@ namespace mp
         mpfr & operator=(long double value);
         mpfr & operator=(std::string const & value);
 
+        operator double() const
+        {
+            return mpfr_get_d(data, MPFR_RNDN);
+        }
+
         mpfr_t data;
 
         template <typename Tag>
@@ -123,6 +128,8 @@ namespace mp
 
         template <typename Expr, typename Enable = void>
         struct optimize;
+  
+        std::string to_string(size_t n = 0, int b = 10/*default_base*/, mp_rnd_t mode = MPFR_RNDN) const;
 
         static std::size_t copy_count;
 
@@ -136,21 +143,60 @@ namespace mp
     template <typename T>
     bool operator==(mpfr const & lhs, T const & rhs)
     {
-        return mpfr_cmp(lhs.data, mpfr(rhs).data) == 0;
+        return lhs == mpfr(rhs);
     }
 
     template <typename T>
     bool operator==(T const & lhs, mpfr const & rhs)
     {
-        return mpfr_cmp(mpfr(lhs).data, rhs.data) == 0;
+        return mpfr(lhs) ==  rhs;
+    }
+        
+    bool operator>=(mpfr const &, mpfr const &);
+
+    template <typename T>
+    bool operator>=(mpfr const & lhs, T const & rhs)
+    {
+        return lhs >= mpfr(rhs);
+    }
+
+    template <typename T>
+    bool operator>=(T const & lhs, mpfr const & rhs)
+    {
+        return mpfr(lhs) >=  rhs;
+    }
+
+    bool operator<=(mpfr const &, mpfr const &);
+    template <typename T>
+    bool operator<=(mpfr const & lhs, T const & rhs)
+    {
+        return lhs <= mpfr(rhs);
+    }
+
+    template <typename T>
+    bool operator<=(T const & lhs, mpfr const & rhs)
+    {
+        return mpfr(lhs) <=  rhs;
+    }
+    
+    bool operator<(mpfr const &, mpfr const &);
+    template <typename T>
+    bool operator<(mpfr const & lhs, T const & rhs)
+    {
+        return lhs < mpfr(rhs);
+    }
+
+    template <typename T>
+    bool operator<(T const & lhs, mpfr const & rhs)
+    {
+        return mpfr(lhs) <  rhs;
     }
 
     void swap(mpfr & f0, mpfr & f1);
 
     inline std::ostream & operator<<(std::ostream & os, mpfr const & m)
     {
-        float tmp = mpfr_get_flt(m.data, MPFR_RNDN);
-        os << tmp;
+        os << m.to_string();
         return os;
     }
 }

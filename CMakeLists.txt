@@ -23,7 +23,7 @@ set(MP_LIBRARY_SOURCES
 )
 
 
-add_library(mp ${MP_LIBRARY_SOURCES})
+add_library(mp SHARED ${MP_LIBRARY_SOURCES})
 target_link_libraries(mp ${Boost_LIBRARIES} ${MPFR_LIBRARY})
 
 set(MP_TEST_SOURCES

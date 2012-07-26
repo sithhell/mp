@@ -12,6 +12,7 @@
 #include <mp/mp_fwd.hpp>
 #include <mp/grammar.hpp>
 #include <mp/optimize.hpp>
+#include <mp/exp.hpp>
 
 #include <boost/proto/proto.hpp>
 
@@ -46,18 +47,27 @@ namespace mp
             : base_type(expr)
         {}
 
-        explicit mp_(Backend const & backend)
+        mp_(Backend const & backend)
             : base_type(terminal_type(backend))
         {}
 
         template <typename T>
-        explicit mp_(T const & t)
+        mp_(T const & t)
             : base_type(
                 boost::proto::make_expr<boost::proto::tag::terminal>(
                     Backend(t)
                 )
             )
         {}
+
+        template <typename Expr>
+        mp_(expr<Expr, Backend> const & xpr)
+            : base_type(
+                terminal_type()
+            )
+        {
+            grammar<Backend>()(xpr, 0, boost::proto::value(*this));
+        }
 
         ////////////////////////////////////////////////////////////////////////
         // Assignment
@@ -79,9 +89,18 @@ namespace mp
         
         // Assign a expression and evaluate it.
         template <typename E>
-        mp_ &operator=(E const & expr)
+        typename boost::enable_if<boost::proto::is_expr<E>, mp_ &>::type
+        operator=(E const & expr)
         {
             grammar<Backend>()(expr, 0, boost::proto::value(*this));
+            return *this;
+        }
+        
+        template <typename E>
+        typename boost::disable_if<boost::proto::is_expr<E>, mp_ &>::type
+        operator=(E const & src)
+        {
+            boost::proto::value(*this) = Backend(src);
             return *this;
         }
 
@@ -107,37 +126,62 @@ namespace mp
         #undef MP_MAKE_ASSIGN_OP
         
         ////////////////////////////////////////////////////////////////////////
+    
+        std::string to_string(size_t n = 0, int b = 10/*default_base*/) const
+        {
+            return boost::proto::value(*this).to_string();
+        }
+
+        operator double() const
+        {
+            return double(boost::proto::value(*this));
+        }
+
+        template <typename Archive>
+        void serialize(Archive & ar, unsigned)
+        {
+            BOOST_ASSERT(false);
+        }
     };
     
-    template <typename Backend>
-    bool operator==(mp_<Backend> const & lhs, mp_<Backend> const & rhs)
-    {
-        return boost::proto::value(lhs) == boost::proto::value(rhs);
-    }
-    
-    template <typename Backend>
-    bool operator==(mp_<Backend> const & lhs, Backend const & rhs)
-    {
-        return boost::proto::value(lhs) == rhs;
-    }
-    
-    template <typename Backend>
-    bool operator==(Backend const & lhs, mp_<Backend> const & rhs)
-    {
-        return lhs == boost::proto::value(rhs);
-    }
-    
-    template <typename Backend, typename T>
-    bool operator==(mp_<Backend> const & lhs, T const & rhs)
-    {
-        return boost::proto::value(lhs) == Backend(rhs);
-    }
-    
-    template <typename Backend, typename T>
-    bool operator==(T const & lhs, mp_<Backend> const & rhs)
-    {
-        return Backend(lhs) == boost::proto::value(rhs);
-    }
+#define MP_MP_BOOL_OPERATOR(OP)                                                 \
+    template <typename Backend>                                                 \
+    bool operator OP(mp_<Backend> const & lhs, mp_<Backend> const & rhs)        \
+    {                                                                           \
+        return boost::proto::value(lhs) OP boost::proto::value(rhs);            \
+    }                                                                           \
+                                                                                \
+    template <typename Backend>                                                 \
+    bool operator OP(mp_<Backend> const & lhs, Backend const & rhs)             \
+    {                                                                           \
+        return boost::proto::value(lhs) OP rhs;                                 \
+    }                                                                           \
+                                                                                \
+    template <typename Backend>                                                 \
+    bool operator OP(Backend const & lhs, mp_<Backend> const & rhs)             \
+    {                                                                           \
+        return lhs OP boost::proto::value(rhs);                                 \
+    }                                                                           \
+                                                                                \
+    template <typename Backend, typename T>                                     \
+    bool operator OP(mp_<Backend> const & lhs, T const & rhs)                   \
+    {                                                                           \
+        return boost::proto::value(lhs) OP Backend(rhs);                        \
+    }                                                                           \
+                                                                                \
+    template <typename Backend, typename T>                                     \
+    bool operator OP(T const & lhs, mp_<Backend> const & rhs)                   \
+    {                                                                           \
+        return Backend(lhs) OP boost::proto::value(rhs);                        \
+    }                                                                           \
+    /**/
+
+    MP_MP_BOOL_OPERATOR(==)
+    MP_MP_BOOL_OPERATOR(>=)
+    MP_MP_BOOL_OPERATOR(<=)
+    MP_MP_BOOL_OPERATOR(<)
+#undef MP_MP_BOOL_OPERATOR
+
 
     template <typename Backend>
     std::ostream & operator<<(std::ostream & os, mp_<Backend> const & m)
