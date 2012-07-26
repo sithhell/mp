@@ -16,6 +16,8 @@
 
 #include <boost/proto/proto.hpp>
 
+#include <boost/assert.hpp>
+
 #include <iostream>
 
 namespace mp
@@ -47,15 +49,23 @@ namespace mp
             : base_type(expr)
         {}
 
+        mp_(BOOST_RV_REF(mp_) expr)
+            : base_type(boost::move(expr))
+        {}
+
         mp_(Backend const & backend)
             : base_type(terminal_type(backend))
         {}
 
+        mp_(BOOST_RV_REF(Backend) backend)
+            : base_type(terminal_type(boost::move(backend)))
+        {}
+
         template <typename T>
-        mp_(T const & t)
+        mp_(BOOST_FWD_REF(T) t)
             : base_type(
                 boost::proto::make_expr<boost::proto::tag::terminal>(
-                    Backend(t)
+                    Backend(boost::forward<T>(t))
                 )
             )
         {}
@@ -79,11 +89,23 @@ namespace mp
             boost::proto::value(*this) = boost::proto::value(src);
             return *this;
         }
+
+        mp_ &operator=(BOOST_RV_REF(mp_) src)
+        {
+            boost::proto::value(*this) = boost::move(boost::proto::value(src));
+            return *this;
+        }
         
         // Copy Assign another Backend value
         mp_ &operator=(Backend const & src)
         {
             boost::proto::value(*this) = src;
+            return *this;
+        }
+        
+        mp_ &operator=(BOOST_RV_REF(Backend) src)
+        {
+            boost::proto::value(*this) = boost::move(src);
             return *this;
         }
         
@@ -98,9 +120,9 @@ namespace mp
         
         template <typename E>
         typename boost::disable_if<boost::proto::is_expr<E>, mp_ &>::type
-        operator=(E const & src)
+        operator=(BOOST_FWD_REF(E) src)
         {
-            boost::proto::value(*this) = Backend(src);
+            boost::proto::value(*this) = Backend(boost::forward<E>(src));
             return *this;
         }
 
@@ -142,6 +164,9 @@ namespace mp
         {
             BOOST_ASSERT(false);
         }
+
+        private:
+            BOOST_COPYABLE_AND_MOVABLE(mp_);
     };
     
 #define MP_MP_BOOL_OPERATOR(OP)                                                 \

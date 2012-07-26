@@ -14,6 +14,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/proto/extends.hpp>
 
+#include <boost/move/move.hpp>
+
 namespace mp
 {
     template <typename Expr, typename Backend>
@@ -29,6 +31,8 @@ namespace mp
             base_type;
 
         expr(Expr const & expr) : base_type(expr) {}
+        
+        expr(BOOST_RV_REF(Expr) expr) : base_type(boost::move(expr)) {}
 
         operator Backend() const
         {
@@ -36,6 +40,8 @@ namespace mp
             grammar<Backend>()(*this, 0, b);
             return b;
         }
+            
+        BOOST_COPYABLE_AND_MOVABLE(expr);
     };
 }
 

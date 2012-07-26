@@ -17,6 +17,16 @@
 #include <string>
 #include <iostream>
 
+#if !defined(MPFR_PREC)
+#define MPFR_PREC(x)      ((x)->_mpfr_prec)
+#endif
+#if !defined(MPFR_EXP)
+#define MPFR_EXP(x)       ((x)->_mpfr_exp)
+#endif
+#if !defined(MPFR_MANT)
+#define MPFR_MANT(x)      ((x)->_mpfr_d)
+#endif
+
 namespace mp
 {
     ////////////////////////////////////////////////////////////////////////////
@@ -46,11 +56,13 @@ namespace mp
 
         mpfr(
             BOOST_RV_REF(mpfr) value
-          , mpfr_rnd_t rnd = MPFR_RNDN
         )
-            : data(value.data)
         {
-            value.data[0]._mpfr_d = 0;
+            MPFR_PREC(data) = MPFR_PREC(value.data);
+            MPFR_SIGN(data) = MPFR_SIGN(value.data);
+            MPFR_EXP(data) = MPFR_EXP(value.data);
+            MPFR_MANT(data) = MPFR_MANT(value.data);
+            MPFR_MANT(value.data) = 0;
         }
 
         // Value Constructors
@@ -100,11 +112,11 @@ namespace mp
         mpfr & operator=(mpfr const & value);
         mpfr & operator=(BOOST_RV_REF(mpfr) value)
         {
-            data[0]._mpfr_prec = value.data[0]._mpfr_prec;
-            data[0]._mpfr_sign = value.data[0]._mpfr_sign;
-            data[0]._mpfr_exp = value.data[0]._mpfr_exp;
-            data[0]._mpfr_d = value.data[0]._mpfr_d;
-            value.data[0]._mpfr_d = 0;
+            MPFR_PREC(data) = MPFR_PREC(value.data);
+            MPFR_SIGN(data) = MPFR_SIGN(value.data);
+            MPFR_EXP(data) = MPFR_EXP(value.data);
+            MPFR_MANT(data) = MPFR_MANT(value.data);
+            MPFR_MANT(value.data) = 0;
             return *this;
         }
         mpfr & operator=(mpfr_t const & value);
