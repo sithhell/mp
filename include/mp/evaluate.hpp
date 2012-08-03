@@ -173,6 +173,9 @@ namespace mp {
             Tag, T const & t, Backend & b, boost::mpl::long_<2>, boost::mpl::true_
         ) const
         {
+            // FIXME: this is innefficient.
+            // Theoretically, we only need to construct a new temporary when
+            // both children are not terminals
             Backend t2;
             typename Backend::template evaluate<Tag> f;
             return
@@ -198,6 +201,11 @@ namespace mp {
             Tag, T const & t, Backend & b, boost::mpl::long_<3>, boost::mpl::true_
         ) const
         {
+            // FIXME: this is innefficient.
+            // Theoretically, we only need to construct a new temporary when
+            // both children are not terminals
+            Backend t1;
+            Backend t2;
             typename Backend::template evaluate<Tag> f;
             return
                 f(
@@ -210,12 +218,12 @@ namespace mp {
                   , grammar<Backend>()(
                         boost::proto::child_c<1>(t)
                       , 0
-                      , b
+                      , t1
                     )
                   , grammar<Backend>()(
                         boost::proto::child_c<2>(t)
                       , 0
-                      , b
+                      , t2
                     )
                 );
         }
