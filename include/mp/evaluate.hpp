@@ -267,6 +267,8 @@ namespace mp {
             Tag, T const & t, Backend & b, boost::mpl::long_<2>, boost::mpl::true_
         ) const
         {
+            Backend t1;
+            Backend t2;
             typename Backend::template evaluate<Tag> f;
             return
                 f(
@@ -274,12 +276,12 @@ namespace mp {
                   , grammar<Backend>()(
                         boost::proto::child_c<0>(t)
                       , 0
-                      , b
+                      , t1
                     )
                   , grammar<Backend>()(
                         boost::proto::child_c<1>(t)
                       , 0
-                      , b
+                      , t2
                     )
                 );
         }

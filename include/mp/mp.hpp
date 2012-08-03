@@ -155,7 +155,14 @@ namespace mp
         template<typename Expr>                                                 \
         mp_ &operator BOOST_PP_CAT(OP,=)(Expr const& expr )                     \
         {                                                                       \
-            return *this = *this OP expr;                                       \
+            grammar<Backend>()(*this OP expr, 0, boost::proto::value(*this));   \
+            return *this;                                                       \
+        }                                                                       \
+        template<typename Expr>                                                 \
+        mp_ &operator BOOST_PP_CAT(OP,=)(Expr & expr )                          \
+        {                                                                       \
+            grammar<Backend>()(*this OP expr, 0, boost::proto::value(*this));   \
+            return *this;                                                       \
         }                                                                       \
         /**/
         

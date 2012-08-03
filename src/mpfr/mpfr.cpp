@@ -22,7 +22,9 @@ namespace mp
     mpfr::mpfr(mpfr const & value, mpfr_rnd_t rnd)
     {
         mpfr_init_set(data, value.data, rnd);
+#ifndef NDEBUG
         ++copy_count;
+#endif
     }
 
     mpfr::mpfr(mpfr_t const & value, mpfr_rnd_t rnd)
@@ -79,7 +81,9 @@ namespace mp
     {
         mpfr tmp(value);
         swap(*this, tmp);
+#ifndef NDEBUG
         ++copy_count;
+#endif
         return *this;
     }
         
