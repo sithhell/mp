@@ -16,6 +16,7 @@ namespace mp
     template <>
     struct mpfr::evaluate<tag::exp>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & op) const
         {
             mpfr_exp(res.data, op.data, MPFR_RNDN);

@@ -50,11 +50,24 @@ namespace mp
     struct mpfr::evaluate<tag::fma>
     {
         typedef mpfr & result_type;
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & op1, mpfr const & op2, mpfr const & op3) const
         {
             mpfr_fma(res.data, op1.data, op2.data, op3.data, MPFR_RNDN);
 
             return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & op1, int op2, mpfr const & op3) const
+        {
+            return (*this)(res, op1, mpfr(op2), op3);
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, int op1, mpfr const & op2, mpfr const & op3) const
+        {
+            return (*this)(res, mpfr(op1), op2, op3);
         }
     };
 

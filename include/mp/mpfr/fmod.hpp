@@ -16,6 +16,7 @@ namespace mp
     template <>
     struct mpfr::evaluate<tag::fmod>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs, mpfr const & lhs) const
         {
             mpfr_fmod(res.data, rhs.data, lhs.data, MPFR_RNDN);

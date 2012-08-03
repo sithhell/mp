@@ -6,6 +6,7 @@
 //==============================================================================
 
 #include <iostream>
+#include <cmath>
 
 #include <mp/mp.hpp>
 #include <mp/mpfr.hpp>

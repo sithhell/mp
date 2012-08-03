@@ -40,6 +40,7 @@ namespace mp
     struct mpfr::evaluate<tag::fms>
     {
         typedef mpfr & result_type;
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & op1, mpfr const & op2, mpfr const & op3) const
         {
             mpfr_fms(res.data, op1.data, op2.data, op3.data, MPFR_RNDN);

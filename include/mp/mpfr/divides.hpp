@@ -16,9 +16,18 @@ namespace mp
     template <>
     struct mpfr::evaluate<boost::proto::tag::divides>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs, mpfr const & lhs) const
         {
             mpfr_div(res.data, rhs.data, lhs.data, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & rhs, double lhs) const
+        {
+            mpfr_div_d(res.data, rhs.data, lhs, MPFR_RNDN);
 
             return res;
         }

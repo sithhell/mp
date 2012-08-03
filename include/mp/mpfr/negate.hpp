@@ -16,6 +16,7 @@ namespace mp
     template <>
     struct mpfr::evaluate<boost::proto::tag::negate>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs) const
         {
             mpfr_neg(res.data, rhs.data, MPFR_RNDN);

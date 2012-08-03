@@ -21,13 +21,7 @@ namespace mp
         : boost::proto::or_<
             boost::proto::when<
                 boost::proto::terminal<boost::proto::_>
-              , boost::proto::call<
-                    evaluate<Backend>(
-                        Tag()
-                      , boost::proto::_value(boost::proto::_)
-                      , boost::proto::_data
-                    )
-                >
+              , boost::proto::_value
             >
           , boost::proto::when<
                 boost::proto::nary_expr<

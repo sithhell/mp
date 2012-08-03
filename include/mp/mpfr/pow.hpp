@@ -16,9 +16,34 @@ namespace mp
     template <>
     struct mpfr::evaluate<tag::pow>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & lhs, mpfr const & rhs) const
         {
             mpfr_pow(res.data, lhs.data, rhs.data, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & lhs, long int rhs) const
+        {
+            mpfr_pow_si(res.data, lhs.data, rhs, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & lhs, int rhs) const
+        {
+            mpfr_pow_si(res.data, lhs.data, rhs, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & lhs, unsigned long int rhs) const
+        {
+            mpfr_pow_ui(res.data, lhs.data, rhs, MPFR_RNDN);
 
             return res;
         }

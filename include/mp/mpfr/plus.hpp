@@ -16,9 +16,26 @@ namespace mp
     template <>
     struct mpfr::evaluate<boost::proto::tag::plus>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs, mpfr const & lhs) const
         {
             mpfr_add(res.data, rhs.data, lhs.data, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & rhs, int lhs) const
+        {
+            mpfr_add_si(res.data, rhs.data, lhs, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, int lhs, mpfr const & rhs) const
+        {
+            mpfr_add_si(res.data, rhs.data, lhs, MPFR_RNDN);
 
             return res;
         }

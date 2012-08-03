@@ -112,113 +112,15 @@ namespace mp {
             typedef Backend & type;
         };
 
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal const &, T const &, Backend &)>
-        {
-            typedef Backend type;
-        };
-        
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal &, T const &, Backend &)>
-        {
-            typedef Backend type;
-        };
-        
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal, T const &, Backend &)>
-        {
-            typedef Backend type;
-        };
-
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal const &, T &, Backend &)>
-        {
-            typedef Backend type;
-        };
-        
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal &, T &, Backend &)>
-        {
-            typedef Backend type;
-        };
-        
-        template <typename This, typename T>
-        struct result<This(boost::proto::tag::terminal, T &, Backend &)>
-        {
-            typedef Backend type;
-        };
-        
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal const &, Backend const &, Backend &)>
-        {
-            typedef Backend const & type;
-        };
-        
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal &, Backend const &, Backend &)>
-        {
-            typedef Backend const & type;
-        };
-        
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal, Backend const &, Backend &)>
-        {
-            typedef Backend const & type;
-        };
-
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal const &, Backend &, Backend &)>
-        {
-            typedef Backend & type;
-        };
-        
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal &, Backend &, Backend &)>
-        {
-            typedef Backend & type;
-        };
-        
-        template <typename This>
-        struct result<This(boost::proto::tag::terminal, Backend &, Backend &)>
-        {
-            typedef Backend & type;
-        };
-        
-        Backend & operator()(boost::proto::tag::terminal, Backend & t, Backend &) const
-        {
-            return t;
-        }
-        
-        Backend const & operator()(boost::proto::tag::terminal, Backend const & t, Backend &) const
-        {
-            return t;
-        }
-        
-        template <typename T>
-        Backend operator()(boost::proto::tag::terminal, T const & t, Backend & b) const
-        {
-            return Backend(t);
-        }
-        
-        template <typename T>
-        Backend operator()(boost::proto::tag::terminal, boost::reference_wrapper<T> const & t, Backend & b) const
-        {
-            return Backend(t.get());
-        }
-        
-        template <typename T>
-        Backend operator()(boost::proto::tag::terminal, boost::reference_wrapper<T const> const & t, Backend & b) const
-        {
-            return Backend(t.get());
-        }
-
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend & operator()(Tag, T const & t, Backend & b) const
         {
             return optimize(Tag(), t, b, typename detail::has_optimize<Backend, T>::type());
         }
 
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend & optimize(Tag, T const & t, Backend & b, boost::mpl::false_) const
         {
             typedef typename boost::proto::arity_of<T>::type arity;
@@ -233,6 +135,7 @@ namespace mp {
         }
         
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend & optimize(Tag, T const & t, Backend & b, boost::mpl::true_) const
         {
             typename Backend::template optimize<T> opti;
@@ -243,6 +146,7 @@ namespace mp {
         }
         
         template <typename Tag, typename T, typename Arity>
+        BOOST_FORCEINLINE
         Backend & eval(
             Tag, T const & t, Backend & b, Arity, boost::mpl::false_
         ) const
@@ -252,6 +156,7 @@ namespace mp {
         }
 
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend &
         eval(
             Tag, T const & t, Backend & b, boost::mpl::long_<1>, boost::mpl::true_
@@ -262,12 +167,12 @@ namespace mp {
         }
 
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend &
         eval(
             Tag, T const & t, Backend & b, boost::mpl::long_<2>, boost::mpl::true_
         ) const
         {
-            Backend t1;
             Backend t2;
             typename Backend::template evaluate<Tag> f;
             return
@@ -276,7 +181,7 @@ namespace mp {
                   , grammar<Backend>()(
                         boost::proto::child_c<0>(t)
                       , 0
-                      , t1
+                      , b
                     )
                   , grammar<Backend>()(
                         boost::proto::child_c<1>(t)
@@ -287,6 +192,7 @@ namespace mp {
         }
 
         template <typename Tag, typename T>
+        BOOST_FORCEINLINE
         Backend &
         eval(
             Tag, T const & t, Backend & b, boost::mpl::long_<3>, boost::mpl::true_

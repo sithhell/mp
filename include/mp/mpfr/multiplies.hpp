@@ -16,9 +16,18 @@ namespace mp
     template <>
     struct mpfr::evaluate<boost::proto::tag::multiplies>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs, mpfr const & lhs) const
         {
             mpfr_mul(res.data, rhs.data, lhs.data, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, long unsigned int rhs, mpfr const & lhs) const
+        {
+            mpfr_mul_ui(res.data, lhs.data, rhs, MPFR_RNDN);
 
             return res;
         }

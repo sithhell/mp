@@ -16,9 +16,18 @@ namespace mp
     template <>
     struct mpfr::evaluate<boost::proto::tag::minus>
     {
+        BOOST_FORCEINLINE
         mpfr & operator()(mpfr &res, mpfr const & rhs, mpfr const & lhs) const
         {
             mpfr_sub(res.data, rhs.data, lhs.data, MPFR_RNDN);
+
+            return res;
+        }
+        
+        BOOST_FORCEINLINE
+        mpfr & operator()(mpfr &res, mpfr const & rhs, int lhs) const
+        {
+            mpfr_sub_si(res.data, rhs.data, lhs, MPFR_RNDN);
 
             return res;
         }
